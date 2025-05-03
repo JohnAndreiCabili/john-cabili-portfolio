@@ -332,12 +332,6 @@ const StoryCard = styled(motion.div)`
   position: relative;
   overflow: hidden;
   transform-style: preserve-3d;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-  }
   
   &::after {
     content: '';
@@ -584,15 +578,9 @@ const HobbyCard = styled(motion.div)`
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
-  transition: all 0.4s ease;
   position: relative;
   height: 280px;
   transform-style: preserve-3d;
-  
-  &:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-  }
 `;
 
 const HobbyImage = styled.div<{ bgColor: string }>`
@@ -680,11 +668,6 @@ const HobbyIcon = styled.div`
   font-size: 36px;
   margin-bottom: 15px;
   transform-origin: center;
-  transition: all 0.3s ease;
-  
-  ${HobbyContent}:hover & {
-    transform: scale(1.2);
-  }
 `;
 
 const BadgeContainer = styled.div`
@@ -1471,7 +1454,6 @@ I build functional applications with a focus on creativity and practicality. I l
           
           <HobbyGrid>
             <HobbyCard
-              whileHover={{ scale: 1.02 }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -1489,7 +1471,6 @@ I build functional applications with a focus on creativity and practicality. I l
             </HobbyCard>
             
             <HobbyCard
-              whileHover={{ scale: 1.02 }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -1507,7 +1488,6 @@ I build functional applications with a focus on creativity and practicality. I l
             </HobbyCard>
             
             <HobbyCard
-              whileHover={{ scale: 1.02 }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

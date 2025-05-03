@@ -9,6 +9,7 @@ const MainPage = lazy(() => import('./pages/MainPage'));
 const About = lazy(() => import('./pages/About'));
 const Resume = lazy(() => import('./pages/Resume'));
 const Projects = lazy(() => import('./pages/Projects'));
+const Blog = lazy(() => import('./pages/Blog'));
 
 // Styled components for the loader
 const LoaderContainer = styled.div`
@@ -107,6 +108,7 @@ function App() {
         <Route path="/about" element={<Layout><About /></Layout>} />
         <Route path="/resume" element={<Layout><Resume /></Layout>} />
         <Route path="/projects" element={<Layout><Projects /></Layout>} />
+        <Route path="/blog" element={<Layout><Blog /></Layout>} />
         <Route path="/contact" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

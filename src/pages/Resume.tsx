@@ -266,7 +266,6 @@ const SkillCard = styled(motion.div)`
   align-items: flex-start;
   overflow: hidden;
   position: relative;
-  transition: all 0.3s ease;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   
   &::before {
@@ -277,13 +276,6 @@ const SkillCard = styled(motion.div)`
     width: 100%;
     height: 5px;
     background: linear-gradient(to right, #0071e3, #64acff);
-  }
-  
-  &:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(0, 113, 227, 0.2);
-    box-shadow: 0 15px 30px rgba(0, 113, 227, 0.15);
   }
   
   &::after {
@@ -356,7 +348,6 @@ const ExperienceCard = styled(motion.div)`
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.7);
   overflow: hidden;
-  transition: all 0.3s ease;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   
   &::before {
@@ -371,17 +362,6 @@ const ExperienceCard = styled(motion.div)`
     border: 4px solid white;
     box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.2);
     z-index: 2;
-  }
-  
-  &:hover {
-    transform: translateY(-5px);
-    border-color: rgba(0, 113, 227, 0.2);
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 15px 30px rgba(0, 113, 227, 0.15);
-    
-    &::before {
-      box-shadow: 0 0 0 5px rgba(0, 113, 227, 0.25);
-    }
   }
   
   &::after {
@@ -455,15 +435,7 @@ const EducationCard = styled(motion.div)`
   overflow: hidden;
   margin-bottom: 0;
   border: 1px solid rgba(255, 255, 255, 0.7);
-  transition: all 0.3s ease;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  
-  &:hover {
-    transform: translateY(-5px);
-    border-color: rgba(0, 113, 227, 0.2);
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 15px 30px rgba(0, 113, 227, 0.15);
-  }
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -533,15 +505,7 @@ const AwardCard = styled(motion.div)`
   height: 100%;
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  
-  &:hover {
-    transform: translateY(-8px);
-    border-color: rgba(0, 113, 227, 0.2);
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 15px 35px rgba(0, 113, 227, 0.15);
-  }
 `;
 
 const AwardHeader = styled.div`
@@ -657,7 +621,6 @@ const Badge = styled.div`
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
   height: 270px;
   display: flex;
   align-items: flex-start;
@@ -665,12 +628,6 @@ const Badge = styled.div`
   padding-top: 15px;
   border: 1px solid rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
-  
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 113, 227, 0.15);
-    border-color: rgba(0, 113, 227, 0.2);
-  }
 `;
 
 // Resume sections
@@ -1098,7 +1055,6 @@ const Resume: React.FC = () => {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5 }}
-                  whileHover={{ y: -5 }}
                 >
                   <EducationIcon>
                     <motion.div
@@ -1145,7 +1101,6 @@ const Resume: React.FC = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      whileHover={{ y: -5, boxShadow: '0 15px 30px rgba(0, 113, 227, 0.15)' }}
                     >
                       <SkillIcon>{skill.icon}</SkillIcon>
                       <SkillName>{skill.name}</SkillName>
@@ -1161,7 +1116,6 @@ const Resume: React.FC = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 + 0.6 }}
-                      whileHover={{ y: -5, boxShadow: '0 15px 30px rgba(0, 113, 227, 0.15)' }}
                     >
                       <SkillIcon>{skill.icon}</SkillIcon>
                       <SkillName>{skill.name}</SkillName>
@@ -1187,7 +1141,6 @@ const Resume: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.05 }}
-                    whileHover={{ y: -5 }}
                   >
                     <JobTitle>Student Intern</JobTitle>
                     <Company><span>🏢</span> OTis Philippines Inc.</Company>
@@ -1201,7 +1154,6 @@ const Resume: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    whileHover={{ y: -5 }}
                   >
                     <JobTitle>Philippine Mango Classification, Quality Assessment, and Price Estimation System</JobTitle>
                     <Company><span>🏢</span> Mangosoft</Company>
@@ -1215,7 +1167,6 @@ const Resume: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    whileHover={{ y: -5 }}
                   >
                     <JobTitle>VeriLuxe: Luxury Bag Authenticator</JobTitle>
                     <Company><span>🏢</span> VeriLuxe</Company>
@@ -1228,7 +1179,6 @@ const Resume: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
-                    whileHover={{ y: -5 }}
                   >
                     <JobTitle>OSCA Management System</JobTitle>
                     <Company><span>🏢</span> Local Government Unit</Company>
@@ -1241,7 +1191,6 @@ const Resume: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
-                    whileHover={{ y: -5 }}
                   >
                     <JobTitle>Graphic Artist and Designer</JobTitle>
                     <Company><span>🏢</span> Freelancing</Company>

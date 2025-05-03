@@ -241,6 +241,12 @@ const Header = () => {
               Projects
             </NavItem>
             <NavItem 
+              to="/blog" 
+              active={activeSection === 'blog'}
+            >
+              Blog
+            </NavItem>
+            <NavItem 
               to="/"
               active={activeSection === 'contact'}
               onClick={(e) => {
