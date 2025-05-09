@@ -521,7 +521,6 @@ const CloseButton = styled(motion.button)`
   z-index: 10000;
 `;
 
-// Add styled components for navigation buttons
 const NavButton = styled(motion.button)`
   position: absolute;
   top: 50%;
@@ -561,7 +560,6 @@ const NextButton = styled(NavButton)`
   right: 25px;
 `;
 
-// Add new styled components for the Beyond Code section
 const HobbyGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -714,7 +712,6 @@ const CircleDecoration = styled(motion.div)<{ size: string; color: string; top: 
   left: ${props => props.left};
 `;
 
-// Simplified function to just return the original path
 const getOptimizedImage = (originalPath: string) => {
   return originalPath;
 };

@@ -109,7 +109,7 @@ function App() {
         <Route path="/resume" element={<Layout><Resume /></Layout>} />
         <Route path="/projects" element={<Layout><Projects /></Layout>} />
         <Route path="/blog" element={<Layout><Blog /></Layout>} />
-        <Route path="/contact" element={<Navigate to="/" replace />} />
+        <Route path="/contact" element={<Layout><MainPage /></Layout>} />
       </Routes>
     </Suspense>
   );

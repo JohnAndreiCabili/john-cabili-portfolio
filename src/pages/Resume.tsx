@@ -985,7 +985,11 @@ const Resume: React.FC = () => {
           transition={{ duration: 0.5 }}
           style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '100px' }}
         >
-          <ProgressHeader title="My Resume" sectionId="resume" />
+          <ProgressHeader 
+            title="My Resume" 
+            sectionId="resume" 
+            subtitle="An overview of my experience and technical skills."
+          />
         </motion.div>
         
         {/* Mobile navigation */}

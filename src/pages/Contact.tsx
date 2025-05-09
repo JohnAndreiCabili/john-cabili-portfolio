@@ -372,6 +372,7 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatMessagesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const messageSound = useRef<HTMLAudioElement | null>(null);
   
@@ -705,14 +706,23 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
   }, [handleSendMessage]);
 
   const toggleChat = useCallback(() => {
-    setIsChatOpen(!isChatOpen);
+    console.log("Toggle chat called, current state:", isChatOpen);
+    setIsChatOpen(prevState => !prevState);
     setShowWelcomeTooltip(false);
     
-    // If opening chat, focus on input field
+    // If opening the chat
     if (!isChatOpen) {
       setTimeout(() => {
         inputRef.current?.focus();
       }, 300);
+    } else {
+      // If closing the chat, ensure elements are blurred
+      setTimeout(() => {
+        const activeElement = document.activeElement as HTMLElement;
+        if (activeElement) {
+          activeElement.blur();
+        }
+      }, 50);
     }
   }, [isChatOpen]);
 
@@ -755,6 +765,9 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
   // Listen for openChatWidget event
   useEffect(() => {
     const handleOpenChatWidget = () => {
+      // If chat is already open, don't do anything to prevent multiple opens
+      if (isChatOpen) return;
+      
       setIsChatOpen(true);
       setShowWelcomeTooltip(false);
       
@@ -765,7 +778,7 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
     
     window.addEventListener('openChatWidget', handleOpenChatWidget);
     return () => window.removeEventListener('openChatWidget', handleOpenChatWidget);
-  }, []);
+  }, [isChatOpen]);
   
   useEffect(() => {
     if (openChat && !isChatOpen) {
@@ -778,11 +791,36 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
     messageSound.current.volume = 0.6;
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Get the actual toggle button element
+      const toggleButton = document.querySelector(".chat-toggle-button");
+      const target = event.target as Node;
+      
+      // Check if the click is outside the chat container AND not on the toggle button
+      if (isChatOpen && 
+          chatContainerRef.current && 
+          !chatContainerRef.current.contains(target) && 
+          toggleButton !== target &&
+          !toggleButton?.contains(target)) {
+        console.log("Closing chat from outside click");
+        setIsChatOpen(false);
+        setShowWelcomeTooltip(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isChatOpen]);
+
   return (
     <ChatWidget>
       <AnimatePresence>
         {isChatOpen && (
           <ChatContainer
+            ref={chatContainerRef}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
@@ -898,7 +936,12 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
       </AnimatePresence>
       
       <ChatButton
-        onClick={toggleChat}
+        className="chat-toggle-button"
+        onClick={(e) => {
+          e.stopPropagation(); // Stop event propagation
+          console.log("Chat button clicked");
+          toggleChat();
+        }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >

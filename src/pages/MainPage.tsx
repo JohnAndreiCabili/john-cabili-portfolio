@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Home from './Home';
-import Contact from './Contact';
 
 const Main = styled.main`
   scroll-behavior: smooth;
@@ -31,7 +30,6 @@ const MainPage: React.FC = () => {
       <Section id="home">
         <Home />
       </Section>
-      <Contact />
     </Main>
   );
 };

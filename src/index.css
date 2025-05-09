@@ -1,9 +1,63 @@
 :root {
   --primary-color: #0071e3;
   --primary-light: #64acff;
-  --text-dark: #222;
-  --text-light: #555;
+  --text-dark: #1e293b;
+  --text-light: #64748b;
   /* Add other global variables as needed */
+}
+
+/* Basic cursor styles */
+* {
+  cursor: default;
+}
+
+/* Override for all clickable elements */
+a, button, [role="button"], input[type="submit"], input[type="button"], 
+.clickable, .category-button, .blog-card, .close-button, 
+[type="checkbox"], [type="radio"], select, .modal-close {
+  cursor: pointer !important;
+}
+
+/* Critical modal cursor fix - highest specificity */
+.modal-overlay, 
+.ReactModal__Overlay {
+  cursor: default !important;
+  z-index: 9999 !important;
+}
+
+/* Ensure all elements in modal have proper cursor */
+.modal-content, 
+[role="dialog"],
+.ModalContent {
+  cursor: default !important;
+  z-index: 10000 !important;
+}
+
+/* Force cursor on close buttons */
+.modal-close, 
+.CloseButton,
+button[aria-label="Close"] {
+  cursor: pointer !important;
+  z-index: 100000 !important;
+}
+
+/* Ultimate solution for cursor visibility */
+html body .modal-overlay *,
+html body .ReactModal__Overlay * {
+  pointer-events: auto !important;
+}
+
+/* Create transparent overlay to fix backdrop issues */
+body::after {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
 }
 
 body {

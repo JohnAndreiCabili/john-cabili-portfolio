@@ -1,9 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
+import styled, { createGlobalStyle, css } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProgressHeader from '../components/ProgressHeader';
 
-// Styled components
+const CursorStyle = createGlobalStyle`
+  * {
+    cursor: default;
+  }
+  
+  a, button, [role="button"], input[type="submit"], input[type="button"], 
+  .clickable, .category-button, .blog-card, .modal-close {
+    cursor: pointer !important;
+  }
+  
+  .modal-overlay {
+    cursor: default !important;
+  }
+  
+  .modal-close {
+    cursor: pointer !important;
+    z-index: 100000 !important;
+  }
+  
+  .blog-card {
+    cursor: pointer !important;
+  }
+  
+  .category-button {
+    cursor: pointer !important;
+  }
+  
+  /* Modal cursors */
+  .ReactModal__Overlay,
+  .modal-overlay,
+  .modal-content,
+  [role="dialog"] {
+    cursor: default !important;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+`;
+
+const cardStyle = css`
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 15px 40px rgba(0, 113, 227, 0.15);
+  }
+`;
+
+const textGradient = css`
+  background: linear-gradient(120deg, #0071e3, #1e88e5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+`;
+
 const PageContainer = styled.div`
   min-height: 100vh;
   position: relative;
@@ -27,6 +90,29 @@ const Shape = styled(motion.div)<{ size: string; color: string; top: string; lef
   top: ${props => props.top};
   left: ${props => props.left};
   border-radius: 50%;
+  will-change: transform;
+`;
+
+const DecorativeElement = styled(motion.div)<{ top: string; left: string; color: string; size: string }>`
+  position: absolute;
+  width: ${props => props.size};
+  height: ${props => props.size};
+  border: 2px solid ${props => props.color};
+  border-radius: 50%;
+  top: ${props => props.top};
+  left: ${props => props.left};
+  z-index: 1;
+`;
+
+const DecorativeLine = styled(motion.div)<{ top: string; left: string; width: string; rotate: string }>`
+  position: absolute;
+  height: 2px;
+  width: ${props => props.width};
+  background: linear-gradient(to right, rgba(0, 113, 227, 0.5), rgba(0, 113, 227, 0.05));
+  top: ${props => props.top};
+  left: ${props => props.left};
+  transform: rotate(${props => props.rotate});
+  z-index: 1;
 `;
 
 const ContentContainer = styled.div`
@@ -37,36 +123,8 @@ const ContentContainer = styled.div`
   z-index: 2;
   
   @media (max-width: 768px) {
-    padding: 100px 24px 60px;
+    padding: 100px 16px 60px;
   }
-`;
-
-const BlogHeader = styled.div`
-  margin-bottom: 60px;
-  text-align: center;
-`;
-
-const BlogTitle = styled.h1`
-  font-size: 48px;
-  font-weight: 800;
-  margin-bottom: 16px;
-  background: linear-gradient(to right, #000, #444);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  letter-spacing: -0.02em;
-  
-  @media (max-width: 768px) {
-    font-size: 36px;
-  }
-`;
-
-const BlogSubtitle = styled.p`
-  font-size: 18px;
-  color: #555;
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
 `;
 
 const CategoryFilter = styled.div`
@@ -74,35 +132,32 @@ const CategoryFilter = styled.div`
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
 `;
 
 const CategoryButton = styled(motion.button)<{ active: boolean }>`
   padding: 10px 20px;
   border-radius: 30px;
   background: ${props => props.active ? 'linear-gradient(to right, #0071e3, #64acff)' : 'white'};
-  color: ${props => props.active ? 'white' : '#555'};
-  border: 1px solid ${props => props.active ? 'transparent' : 'rgba(0, 0, 0, 0.1)'};
+  color: ${props => props.active ? 'white' : '#64748b'};
+  border: 1px solid ${props => props.active ? 'transparent' : 'rgba(0, 0, 0, 0.05)'};
   font-weight: ${props => props.active ? '600' : '500'};
   font-size: 16px;
-  cursor: pointer;
-  box-shadow: ${props => props.active ? '0 10px 25px rgba(0, 113, 227, 0.2)' : '0 4px 12px rgba(0, 0, 0, 0.05)'};
+  cursor: pointer !important;
+  box-shadow: ${props => props.active ? '0 10px 25px rgba(0, 113, 227, 0.2)' : '0 4px 12px rgba(0, 0, 0, 0.03)'};
   transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 113, 227, 0.15);
-  }
+  z-index: 10;
 `;
 
 const BlogGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 30px;
+  gap: 40px;
   margin-bottom: 60px;
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 30px;
   }
 `;
 
@@ -110,34 +165,51 @@ const FeaturedBlog = styled(motion.div)`
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background: white;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
-  margin-bottom: 40px;
+  ${cardStyle}
+  margin-bottom: 50px;
   
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
   }
 `;
 
-const FeaturedImage = styled.div`
-  height: 100%;
-  min-height: 400px;
-  background-size: cover;
-  background-position: center;
+const ImageWrapper = styled.div`
   position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
-  }
+  height: 220px;
+  width: 100%;
+  overflow: hidden;
   
   @media (max-width: 900px) {
-    min-height: 300px;
+    height: 220px;
   }
+`;
+
+const FeaturedImageWrapper = styled(ImageWrapper)`
+  height: 300px;
+  min-height: unset;
+  
+  @media (max-width: 900px) {
+    height: 250px;
+  }
+`;
+
+const OptimizedImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease, opacity 0.3s ease;
+  opacity: 0;
+  will-change: transform, opacity;
+  &.loaded {
+    opacity: 1;
+  }
+`;
+
+const ImageOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
+  z-index: 1;
 `;
 
 const FeaturedContent = styled.div`
@@ -156,49 +228,33 @@ const FeaturedBadge = styled.span`
   color: white;
   font-size: 14px;
   font-weight: 600;
-  padding: 6px 12px;
+  padding: 8px 14px;
   border-radius: 20px;
   margin-bottom: 20px;
   display: inline-block;
   box-shadow: 0 5px 15px rgba(255, 45, 85, 0.2);
+  align-self: flex-start;
 `;
 
 const BlogCard = styled(motion.div)`
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  ${cardStyle}
   display: flex;
   flex-direction: column;
   height: 100%;
-  cursor: pointer;
+  cursor: pointer !important;
+  z-index: 5;
   
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 50px rgba(0, 113, 227, 0.15);
-  }
-`;
-
-const BlogImage = styled.div`
-  height: 220px;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
+  &:hover ${OptimizedImage} {
+    transform: scale(1.05);
   }
 `;
 
 const BlogContent = styled.div`
-  padding: 24px;
+  padding: 28px;
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: white;
 `;
 
 const BlogCategory = styled.span`
@@ -212,14 +268,19 @@ const BlogCategory = styled.span`
 const BlogPostTitle = styled.h3`
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   color: var(--text-dark);
   line-height: 1.3;
+  transition: color 0.3s ease;
+  
+  ${BlogCard}:hover & {
+    color: var(--primary-color);
+  }
 `;
 
 const BlogExcerpt = styled.p`
   font-size: 16px;
-  color: #555;
+  color: #64748b;
   line-height: 1.6;
   flex: 1;
   margin-bottom: 20px;
@@ -230,8 +291,10 @@ const MetaInfo = styled.div`
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
-  color: #888;
+  color: #94a3b8;
   margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
 `;
 
 const DateInfo = styled.span`
@@ -247,14 +310,30 @@ const ModalOverlay = styled(motion.div)`
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
   z-index: 9999;
   padding: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: default !important;
+  pointer-events: auto !important;
+  will-change: opacity;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
   
   @media (max-width: 768px) {
     padding: 20px;
+  }
+  
+  @supports not (backdrop-filter: blur(5px)) {
+    background: rgba(0, 0, 0, 0.9);
   }
 `;
 
@@ -267,6 +346,17 @@ const ModalContent = styled(motion.div)`
   overflow-y: auto;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
   position: relative;
+  will-change: transform, opacity;
+  pointer-events: auto !important;
+  
+  * {
+    pointer-events: auto !important;
+  }
+  
+  a, button, [role="button"], .clickable {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+  }
   
   &::-webkit-scrollbar {
     width: 6px;
@@ -295,9 +385,10 @@ const CloseButton = styled(motion.button)`
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  cursor: pointer;
+  cursor: pointer !important;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  z-index: 10;
+  z-index: 100000;
+  pointer-events: auto !important;
 `;
 
 const PostHeader = styled.div`
@@ -309,10 +400,10 @@ const PostHeader = styled.div`
 `;
 
 const PostTitle = styled.h2`
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 800;
   margin-bottom: 20px;
-  color: var(--text-dark);
+  ${textGradient}
   
   @media (max-width: 768px) {
     font-size: 28px;
@@ -331,37 +422,60 @@ const PostMeta = styled.div`
   }
 `;
 
-const PostImage = styled.div`
+const PostImageContainer = styled.div`
   width: 100%;
   height: 400px;
-  background-size: cover;
-  background-position: center;
+  position: relative;
   margin-bottom: 30px;
+  overflow: hidden;
   
   @media (max-width: 768px) {
     height: 250px;
   }
 `;
 
+const PostImageEl = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+`;
+
+const PostImage = memo(({ src }: { src: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  return (
+    <PostImageContainer>
+      {!isLoaded && <SkeletonLoader />}
+      <PostImageEl 
+        src={src} 
+        alt="Post cover" 
+        onLoad={() => setIsLoaded(true)}
+        style={{ opacity: isLoaded ? 1 : 0 }}
+      />
+    </PostImageContainer>
+  );
+});
+
 const PostContent = styled.div`
   padding: 0 40px 40px;
   font-size: 18px;
   line-height: 1.8;
-  color: #444;
+  color: #334155;
   
   p {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
   
   h3 {
     font-size: 24px;
     font-weight: 700;
-    margin: 30px 0 20px;
+    margin: 36px 0 20px;
     color: var(--text-dark);
   }
   
   ul, ol {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     padding-left: 24px;
   }
   
@@ -384,307 +498,442 @@ const PostContent = styled.div`
 const NoResults = styled.div`
   text-align: center;
   padding: 60px 20px;
-  color: #555;
+  color: #64748b;
   font-size: 18px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 `;
 
-// Sample blog posts data
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
+
+const SkeletonLoader = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(211, 211, 211, 0.2) 25%,
+    rgba(211, 211, 211, 0.24) 37%,
+    rgba(211, 211, 211, 0.2) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.5s infinite;
+  
+  @keyframes shimmer {
+    0% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+`;
+
+const LazyImage = memo(({ src, alt }: { src: string; alt: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  return (
+    <>
+      {!isLoaded && <SkeletonLoader />}
+      <OptimizedImage 
+        src={src} 
+        alt={alt} 
+        loading="lazy" 
+        onLoad={() => setIsLoaded(true)}
+        className={isLoaded ? 'loaded' : ''}
+      />
+    </>
+  );
+});
+
+const MemoizedBlogCard = memo(({ post, index, openPostDetail }: { 
+  post: any, 
+  index: number, 
+  openPostDetail: (post: any) => void 
+}) => (
+  <BlogCard
+    key={post.id}
+    variants={cardVariants}
+    initial="hidden"
+    animate="visible"
+    transition={{ duration: 0.4, delay: index * 0.05 }}
+    onClick={() => openPostDetail(post)}
+    whileHover={{ y: -8 }}
+    className="blog-card"
+  >
+    <ImageWrapper>
+      <LazyImage
+        src={post.image}
+        alt={post.title}
+      />
+      <ImageOverlay />
+    </ImageWrapper>
+    <BlogContent>
+      <BlogCategory>{post.category}</BlogCategory>
+      <BlogPostTitle>{post.title}</BlogPostTitle>
+      <BlogExcerpt>{post.excerpt}</BlogExcerpt>
+      <MetaInfo>
+        <DateInfo>
+          <span role="img" aria-label="calendar">📅</span> {post.date}
+        </DateInfo>
+      </MetaInfo>
+    </BlogContent>
+  </BlogCard>
+));
+
 const blogPosts = [
   {
     id: 1,
-    title: 'Conducting Research and Evaluating Payment Integration Solutions',
+    title: 'Payment Information Management Architecture for Slack Integration',
     category: 'Research',
-    date: 'March 15, 2024',
-    image: '/images/project - veriluxe.jpg',
-    excerpt: 'How I researched and evaluated different payment gateways for integration into our enterprise platform.',
+    date: 'February 27, 2025',
+    image: '/images/blog-1.jpg',
+    excerpt: 'Researching payment management architecture for Slack workspaces using Paddle with role-based access control.',
     featured: true,
     content: `
-      <p>During my internship at OTis Philippines Inc., one of my primary tasks was to research and evaluate various payment integration solutions for our enterprise platform. This project allowed me to develop valuable skills in technical research, comparative analysis, and documentation.</p>
+      <p>At OTis Philippines Inc., I researched payment information management architecture for Slack workspaces using Paddle, focusing on secure role-based access for workspace owners and admins.</p>
       
-      <h3>The Challenge</h3>
-      <p>The company needed to implement a secure, reliable payment system that could support multiple currencies and payment methods with minimal transaction fees. As part of the technical team, my role was to:</p>
+      <h3>Requirements</h3>
+      <p>The project needed to address:</p>
       <ul>
-        <li>Research available payment gateways suitable for enterprise applications</li>
-        <li>Evaluate their features, security protocols, and integration complexity</li>
-        <li>Document findings in a comprehensive comparison matrix</li>
-        <li>Provide recommendations based on specific project requirements</li>
+        <li>Enabling workspace owners and potentially admins to manage payment information</li>
+        <li>Supporting multiple authorized users per workspace to prevent access loss if owners become inactive</li>
+        <li>Isolating payment information from the Slack frontend for security</li>
+        <li>Maintaining secure access control while enabling management functions</li>
       </ul>
       
-      <h3>The Research Process</h3>
-      <p>I began by identifying key players in the payment processing industry, focusing on those with robust APIs and documentation. For each provider, I assessed:</p>
+      <h3>Research Methods</h3>
+      <p>I conducted the research by:</p>
       <ul>
-        <li>Integration complexity and available SDKs</li>
-        <li>Security features and compliance certifications</li>
-        <li>Transaction fees and pricing structures</li>
-        <li>Support for international payments</li>
-        <li>Documentation quality and community support</li>
+        <li>Evaluating Paddle integration options for payment processing</li>
+        <li>Analyzing role-based access models specific to Slack workspaces</li>
+        <li>Creating Architecture Decision Records (MADRs) to document technical options</li>
+        <li>Designing sequence diagrams illustrating authorization and payment flows between Slack and Paddle</li>
       </ul>
       
-      <p>Throughout this process, I collaborated with senior developers to understand technical requirements and constraints, ensuring my research aligned with the project's objectives.</p>
-      
-      <h3>Deliverables and Impact</h3>
-      <p>My research culminated in a comprehensive report that included:</p>
+      <h3>Key Findings</h3>
+      <p>Research determined that:</p>
       <ul>
-        <li>A comparison matrix of the top 5 payment gateways</li>
-        <li>Detailed integration flowcharts for the top 3 candidates</li>
-        <li>Cost analysis for different transaction volumes</li>
-        <li>Security assessment and compliance overview</li>
-        <li>Implementation recommendations and potential challenges</li>
+        <li>Direct integration with Paddle's customer portal optimized security and usability</li>
+        <li>This approach prevented Slack frontend from accessing sensitive payment data</li>
+        <li>Paddle's built-in user management handled multi-user access requirements</li>
+        <li>Webhook integration enabled real-time payment status notifications back to Slack</li>
       </ul>
       
-      <p>Based on my findings, the development team proceeded with the most suitable solution, which significantly reduced integration time and helped establish a secure payment processing system.</p>
-      
-      <h3>Skills Developed</h3>
-      <p>This project enhanced my abilities in:</p>
+      <h3>Deliverables</h3>
+      <p>The project produced:</p>
       <ul>
-        <li>Technical research and comparative analysis</li>
-        <li>Understanding of payment processing systems</li>
-        <li>API evaluation and integration planning</li>
-        <li>Technical documentation and reporting</li>
-        <li>Communication with technical stakeholders</li>
+        <li>Architecture Decision Record comparing four integration options</li>
+        <li>Sequence diagrams showing user flows from Slack to Paddle for payment management</li>
+        <li>Security analysis for each approach focusing on data isolation</li>
+        <li>Implementation guidelines for directing users to Paddle portal</li>
+      </ul>
+      
+      <h3>Technical Skills Applied</h3>
+      <p>This project involved:</p>
+      <ul>
+        <li>Technical architecture research and analysis</li>
+        <li>Payment processing integration patterns</li>
+        <li>Security and compliance assessment for financial data</li>
+        <li>MADR documentation methodology</li>
+        <li>UML sequence diagramming for cross-system workflows</li>
       </ul>
     `
   },
   {
     id: 2,
-    title: 'Implementing Test Scripts for Frontend Components',
+    title: 'Selenium Test Automation for Slack UI Components',
     category: 'Development',
-    date: 'April 2, 2024',
-    image: '/images/project - mangosoft.jpg',
-    excerpt: 'My experience creating automated tests for React components to improve code quality and reduce bugs.',
+    date: 'March 15, 2025',
+    image: '/images/blog-2.jpg',
+    excerpt: 'Implementing Selenium tests to validate UI components in a Slack-integrated application.',
     featured: false,
     content: `
-      <p>As part of my internship responsibilities, I was tasked with developing test scripts for frontend React components, contributing to the team's goal of improving code quality and reducing regression bugs.</p>
+      <p>I developed automated testing scripts at OTis Philippines Inc. to validate UI components in a Slack-integrated application, focusing on the billing settings functionality.</p>
       
-      <h3>The Project Context</h3>
-      <p>The development team was working on a complex web application with numerous interactive components. With the rapid development pace, ensuring component reliability became crucial. I was assigned to help implement the testing infrastructure for these components.</p>
+      <h3>Project Scope</h3>
+      <p>The application required test automation for a Slack integration with billing settings modals and user interaction flows.</p>
       
-      <h3>My Approach</h3>
-      <p>I approached this task methodically:</p>
+      <h3>Implementation</h3>
+      <p>The testing approach involved:</p>
       <ol>
-        <li>First, I familiarized myself with the testing stack (Jest and React Testing Library)</li>
-        <li>Identified critical components that needed test coverage based on their complexity and importance</li>
-        <li>Studied component behavior to understand expected outcomes under different conditions</li>
-        <li>Wrote comprehensive test cases covering: rendering, user interactions, state changes, and edge cases</li>
-        <li>Integrated tests with the CI/CD pipeline to automate test execution</li>
+        <li>Analyzing the existing codebase and testing infrastructure</li>
+        <li>Identifying UI components and workflows requiring testing</li>
+        <li>Developing Selenium scripts for the billing interface</li>
+        <li>Implementing validation checks for UI states and interactions</li>
+        <li>Setting up test cases for expected workflow outcomes</li>
       </ol>
       
-      <h3>Challenges and Solutions</h3>
-      <p>During this process, I encountered several challenges:</p>
+      <h3>Test Coverage</h3>
+      <p>The developed scripts tested:</p>
       <ul>
-        <li><strong>Complex component interactions:</strong> I used mock functions to isolate components and test their behavior independently</li>
-        <li><strong>Asynchronous operations:</strong> I implemented proper async/await patterns and waitFor utilities to test components with API calls</li>
-        <li><strong>UI animations:</strong> I learned to properly mock animation libraries to enable accurate testing</li>
+        <li>Navigation to billing settings modals</li>
+        <li>UI element validation and state checking</li>
+        <li>User interaction simulation (clicks, form submissions)</li>
+        <li>Error state validation</li>
+        <li>Success state confirmation</li>
       </ul>
       
-      <h3>Results and Impact</h3>
-      <p>My testing contributions led to:</p>
+      <h3>Technical Challenges</h3>
+      <p>Implementation required solving:</p>
       <ul>
-        <li>Test coverage increase from 45% to 78% for critical components</li>
-        <li>Detection of 12 previously unidentified bugs</li>
-        <li>Easier refactoring process due to comprehensive test cases</li>
-        <li>Adoption of test-driven development practices by the team</li>
+        <li>UI element selection for dynamically generated components</li>
+        <li>Frame-switching logic for Slack's iframe architecture</li>
+        <li>Timing synchronization for modal animations and state changes</li>
       </ul>
       
-      <h3>Skills Enhanced</h3>
-      <p>This experience significantly improved my:</p>
+      <h3>Results</h3>
+      <p>The test implementation:</p>
       <ul>
-        <li>Understanding of Jest and React Testing Library</li>
-        <li>Ability to write effective, maintainable tests</li>
-        <li>Debugging skills and attention to detail</li>
-        <li>Knowledge of React component lifecycle and behavior</li>
+        <li>Automated verification of billing UI functionality</li>
+        <li>Reduced manual testing time by 75%</li>
+        <li>Established a framework for expanding test coverage</li>
+        <li>Identified UI inconsistencies during development</li>
+      </ul>
+      
+      <h3>Technical Skills Applied</h3>
+      <p>This project utilized:</p>
+      <ul>
+        <li>Selenium WebDriver and automation frameworks</li>
+        <li>Test strategy development for UI workflows</li>
+        <li>JavaScript for test script implementation</li>
+        <li>DOM traversal and element selection techniques</li>
+        <li>Test debugging and CI/CD integration</li>
       </ul>
     `
   },
   {
     id: 3,
-    title: 'Technical Documentation for Architecture Decision Records',
-    category: 'Documentation',
-    date: 'April 20, 2024',
-    image: '/images/award-6.jpg',
-    excerpt: 'Creating comprehensive documentation for architectural decisions and their technical implications.',
+    title: 'Language Detection Library Evaluation for Rust',
+    category: 'Research',
+    date: 'March 6, 2025',
+    image: '/images/blog-3.jpg',
+    excerpt: 'Comparing language detection libraries in Rust with a focus on whitelisting capabilities for 26 specific languages.',
     featured: false,
     content: `
-      <p>During my internship, I was assigned to assist the senior developers in documenting Architecture Decision Records (ADRs) for critical system components. This experience provided valuable insights into technical decision-making processes and documentation standards.</p>
+      <p>At OTis Philippines Inc., I evaluated language detection technologies in the Rust ecosystem, focusing on libraries supporting language whitelisting for multilingual applications.</p>
       
-      <h3>What Are ADRs?</h3>
-      <p>Architecture Decision Records document important architectural decisions made during the development process. Each ADR includes the context, available options, decision made, and the reasoning behind it. These records serve as a historical reference for future developers and stakeholders.</p>
-      
-      <h3>My Responsibilities</h3>
-      <p>I was responsible for:</p>
+      <h3>Research Objectives</h3>
+      <p>The research aimed to:</p>
       <ul>
-        <li>Attending architecture planning meetings to understand decisions</li>
-        <li>Interviewing senior developers about their decision rationales</li>
-        <li>Researching technical alternatives considered during the decision process</li>
-        <li>Drafting clear, concise ADRs using the company's template</li>
-        <li>Creating supporting diagrams to illustrate architectural choices</li>
-        <li>Revising documents based on stakeholder feedback</li>
+        <li>Identify Rust language detection libraries with whitelisting support</li>
+        <li>Verify support for 26 specific languages including rare languages</li>
+        <li>Measure performance, accuracy, and implementation requirements</li>
+        <li>Document findings for technical decision-making</li>
       </ul>
       
-      <h3>The Documentation Process</h3>
-      <p>For each architectural decision, I followed a structured process:</p>
+      <h3>Evaluated Technologies</h3>
+      <p>The research covered:</p>
+      <ul>
+        <li>Lingua-RS: Trigram-based detection with native whitelisting</li>
+        <li>Whichlang: Logistic regression with n-gram preprocessing</li>
+        <li>CLD3-RS: Neural network-based language detector</li>
+        <li>Rust-CLD2: Naïve Bayesian classification for language detection</li>
+        <li>Additional Rust ecosystem libraries</li>
+      </ul>
+      
+      <h3>Methodology</h3>
+      <p>The evaluation process consisted of:</p>
       <ol>
-        <li>Gather context and background information from meetings and interviews</li>
-        <li>Research all considered alternatives and their pros/cons</li>
-        <li>Document the decision in clear, technical language</li>
-        <li>Create supporting diagrams using Mermaid and Lucidchart</li>
-        <li>Submit for review by the technical team</li>
-        <li>Incorporate feedback and finalize the documentation</li>
-        <li>Add to the repository of ADRs for future reference</li>
+        <li>Testing each library with identical text samples</li>
+        <li>Documenting support for the 26 required languages</li>
+        <li>Testing whitelisting implementation or potential workarounds</li>
+        <li>Measuring memory usage and processing performance</li>
+        <li>Documenting implementation examples</li>
       </ol>
       
-      <h3>Impact and Value</h3>
-      <p>My documentation work:</p>
+      <h3>Technical Findings</h3>
+      <p>Key findings included:</p>
       <ul>
-        <li>Created a comprehensive record of 8 critical architectural decisions</li>
-        <li>Improved knowledge transfer between development teams</li>
-        <li>Provided clear context for new team members joining the project</li>
-        <li>Established a standard for future architectural documentation</li>
+        <li>Language support varied from 16 to 100+ languages across libraries</li>
+        <li>Few libraries provided native whitelisting functionality</li>
+        <li>Memory usage ranged from 5MB to 1.2GB depending on the library</li>
+        <li>Detection accuracy for rare languages varied significantly</li>
       </ul>
       
-      <h3>Skills Developed</h3>
-      <p>This experience strengthened my:</p>
+      <h3>Deliverables</h3>
+      <p>The research produced:</p>
       <ul>
-        <li>Technical writing and documentation skills</li>
-        <li>Understanding of software architecture principles</li>
-        <li>Ability to communicate complex technical concepts clearly</li>
-        <li>Knowledge of diagram creation for technical documentation</li>
-        <li>Collaboration with senior technical stakeholders</li>
+        <li>Architecture Decision Record with technical comparisons</li>
+        <li>Implementation examples for each library</li>
+        <li>Performance benchmarks and resource utilization data</li>
+        <li>Technical recommendations based on project constraints</li>
+      </ul>
+      
+      <h3>Technical Skills Applied</h3>
+      <p>This project involved:</p>
+      <ul>
+        <li>Technical library evaluation and benchmarking</li>
+        <li>Natural language processing technology assessment</li>
+        <li>API and implementation pattern analysis</li>
+        <li>Technical documentation and architectural decision-making</li>
+        <li>Rust ecosystem knowledge</li>
       </ul>
     `
   },
   {
     id: 4,
-    title: 'Evaluating Natural Language Processing Technologies',
-    category: 'Research',
-    date: 'May 5, 2024',
-    image: '/images/award-2.jpg',
-    excerpt: 'Researching and comparing language detection technologies for multilingual feature implementation.',
+    title: 'Portfolio Website Implementation',
+    category: 'Development',
+    date: 'April 22, 2024',
+    image: '/images/blog-4.jpg',
+    excerpt: 'Building a portfolio website with React, TypeScript, and Framer Motion to showcase technical skills and projects.',
     featured: false,
     content: `
-      <p>As part of my internship responsibilities, I conducted comprehensive research on natural language processing technologies, specifically focusing on language detection capabilities for a multilingual feature implementation.</p>
+      <p>I developed this portfolio website as a final project during my OTis Philippines Inc. internship to showcase technical skills and professional experience using React and TypeScript.</p>
       
-      <h3>Project Background</h3>
-      <p>The company was expanding its software to support multiple languages, requiring automatic language detection for user inputs. I was tasked with researching available NLP libraries and services to find the most suitable solution based on accuracy, performance, and integration complexity.</p>
-      
-      <h3>Research Methodology</h3>
-      <p>My approach to this research project involved:</p>
+      <h3>Technical Requirements</h3>
+      <p>The project aimed to:</p>
       <ul>
-        <li>Identifying key NLP libraries and services with language detection capabilities</li>
-        <li>Developing test datasets in multiple languages to evaluate accuracy</li>
-        <li>Creating a testing framework to measure performance metrics</li>
-        <li>Assessing integration complexity for each solution</li>
-        <li>Analyzing cost implications for cloud-based services</li>
+        <li>Create a responsive SPA with animation support</li>
+        <li>Implement performance optimization techniques</li>
+        <li>Showcase technical skills and internship projects</li>
+        <li>Apply frontend development best practices</li>
+        <li>Create a maintainable component architecture</li>
       </ul>
       
-      <h3>Technologies Evaluated</h3>
-      <p>I evaluated several technologies, including:</p>
+      <h3>Technology Stack</h3>
+      <p>Implementation used:</p>
       <ul>
-        <li>Google Cloud Natural Language API</li>
-        <li>Azure Text Analytics</li>
-        <li>AWS Comprehend</li>
-        <li>Open-source libraries like langdetect, fastText, and spaCy</li>
+        <li>React 18 with TypeScript</li>
+        <li>Styled-components for CSS-in-JS styling</li>
+        <li>Framer Motion for animation system</li>
+        <li>React Router for navigation</li>
+        <li>Dynamic imports for code splitting</li>
+        <li>Responsive design with CSS Grid and Flexbox</li>
       </ul>
       
-      <p>For each option, I conducted thorough testing across 15 different languages with varying text lengths and complexities.</p>
+      <h3>Implementation Process</h3>
+      <p>Development followed this workflow:</p>
+      <ol>
+        <li>Component architecture planning and wireframing</li>
+        <li>Project structure setup and build configuration</li>
+        <li>Core component implementation</li>
+        <li>Animation and interaction integration</li>
+        <li>Performance optimization</li>
+        <li>Cross-device testing and bug fixing</li>
+      </ol>
       
-      <h3>Findings and Recommendations</h3>
-      <p>Key findings from my research included:</p>
+      <h3>Key Features</h3>
+      <p>The implementation includes:</p>
       <ul>
-        <li>Cloud services provided higher accuracy but at a significant cost for high-volume applications</li>
-        <li>Some open-source libraries performed almost as well for common languages</li>
-        <li>Performance varied significantly based on text length and language rarity</li>
-        <li>Hybrid approaches (using open-source for common languages and cloud services for rare languages) offered the best balance</li>
+        <li>Interactive homepage with particle system</li>
+        <li>Project showcase with image galleries</li>
+        <li>Resume section with PDF export</li>
+        <li>Blog component for internship documentation</li>
+        <li>Contact form with validation</li>
+        <li>Animated page transitions</li>
       </ul>
       
-      <p>I provided detailed recommendations based on the project's specific requirements, including cost projections and scalability considerations.</p>
-      
-      <h3>Skills Enhanced</h3>
-      <p>This project strengthened my abilities in:</p>
+      <h3>Technical Challenges</h3>
+      <p>Development required solving:</p>
       <ul>
-        <li>Technical research and comparative analysis</li>
-        <li>Understanding of NLP technologies and their applications</li>
-        <li>Designing and implementing testing frameworks</li>
-        <li>Data analysis and interpretation</li>
-        <li>Technical reporting and presentation</li>
+        <li>Animation performance optimization</li>
+        <li>Browser compatibility for CSS features</li>
+        <li>Responsive layout implementation</li>
+        <li>Asset loading and optimization</li>
+      </ul>
+      
+      <h3>Technical Skills Applied</h3>
+      <p>This project utilized:</p>
+      <ul>
+        <li>React component architecture</li>
+        <li>TypeScript for type safety</li>
+        <li>CSS-in-JS patterns</li>
+        <li>Performance optimization techniques</li>
+        <li>Modern JavaScript features</li>
       </ul>
     `
   },
   {
     id: 5,
-    title: 'User Access Management Research and Implementation Planning',
-    category: 'Security',
-    date: 'May 18, 2024',
-    image: '/images/award-3.jpg',
-    excerpt: 'Exploring role-based access control systems and developing an implementation strategy.',
+    title: 'MADR Technical Documentation Implementation',
+    category: 'Documentation',
+    date: 'April 5, 2025',
+    image: '/images/blog-5.jpg',
+    excerpt: 'Creating standardized technical documentation using the MADR methodology for system design decisions.',
     featured: false,
     content: `
-      <p>During my internship at OTis Philippines Inc., I was assigned to research user access management systems and develop an implementation strategy for improving the company's role-based access control (RBAC) system.</p>
+      <p>At OTis Philippines Inc., I developed technical documentation using Architecture Decision Records (ADRs) for multiple projects, creating standardized records of technical decisions.</p>
       
-      <h3>Project Objectives</h3>
-      <p>The company needed to enhance its existing user permission system to support more granular access controls, improve security, and simplify administration. My task was to research available solutions and create a detailed implementation plan.</p>
-      
-      <h3>Research Focus</h3>
-      <p>My research focused on several key areas:</p>
+      <h3>Documentation Goals</h3>
+      <p>The documentation aimed to:</p>
       <ul>
-        <li>RBAC frameworks and best practices</li>
-        <li>Authentication standards (OAuth 2.0, OpenID Connect)</li>
-        <li>Authorization systems and policy enforcement points</li>
-        <li>Audit logging and access tracking</li>
-        <li>Implementation complexity and migration considerations</li>
+        <li>Record technical decisions with reasoning</li>
+        <li>Document alternative options considered</li>
+        <li>Preserve context and constraints for decisions</li>
+        <li>Enable knowledge transfer between teams</li>
+        <li>Standardize decision documentation format</li>
       </ul>
       
-      <h3>Methodology and Process</h3>
-      <p>I approached this task through:</p>
+      <h3>MADR Implementation</h3>
+      <p>The documentation used Markdown Architecture Decision Records with:</p>
+      <ul>
+        <li>Structured format with standardized sections</li>
+        <li>Problem statements and decision outcomes</li>
+        <li>Option analysis with pros/cons tables</li>
+        <li>Decision drivers and consequence documentation</li>
+        <li>Version control for change tracking</li>
+      </ul>
+      
+      <h3>Documented Technical Decisions</h3>
+      <p>Projects documented included:</p>
+      <ul>
+        <li>Payment system integration architecture</li>
+        <li>Language detection technology selection</li>
+        <li>Authentication system design</li>
+        <li>Data storage architecture</li>
+      </ul>
+      
+      <h3>Documentation Process</h3>
+      <p>Each ADR followed this workflow:</p>
       <ol>
-        <li>Reviewing industry standards and security best practices</li>
-        <li>Analyzing the current system's limitations and pain points</li>
-        <li>Evaluating third-party solutions vs. custom implementation options</li>
-        <li>Interviewing system administrators about their requirements</li>
-        <li>Creating a comprehensive comparison of solutions</li>
-        <li>Developing a detailed implementation plan</li>
+        <li>Requirement gathering from stakeholders</li>
+        <li>Technical option research</li>
+        <li>Option documentation with pros/cons analysis</li>
+        <li>Sequence diagram creation for visual explanation</li>
+        <li>Technical review facilitation</li>
+        <li>Final documentation with implementation details</li>
       </ol>
       
-      <h3>Key Findings and Recommendations</h3>
-      <p>My research led to several important findings:</p>
+      <h3>Business Impact</h3>
+      <p>The documentation provided:</p>
       <ul>
-        <li>The existing system lacked proper separation between authentication and authorization</li>
-        <li>Attribute-based access control (ABAC) would provide more flexibility than basic RBAC</li>
-        <li>Implementing JWT-based authentication with centralized policy management offered the best balance of security and usability</li>
-        <li>A phased migration approach would minimize disruption to existing operations</li>
+        <li>Technical knowledge base for current and future development</li>
+        <li>Structured framework for technical discussions</li>
+        <li>Transparency for cross-team decision understanding</li>
+        <li>Reduced decision revisiting and redundant analysis</li>
+        <li>Technical governance foundation</li>
       </ul>
       
-      <p>I developed a comprehensive implementation plan that included:</p>
+      <h3>Technical Skills Applied</h3>
+      <p>This work involved:</p>
       <ul>
-        <li>Technical architecture design</li>
-        <li>Migration strategy with minimal downtime</li>
-        <li>Testing and validation procedures</li>
-        <li>Administrator training requirements</li>
-        <li>Timeline and resource estimates</li>
-      </ul>
-      
-      <h3>Impact and Skills Developed</h3>
-      <p>This project allowed me to develop:</p>
-      <ul>
-        <li>In-depth understanding of authentication and authorization systems</li>
-        <li>Security considerations for user access management</li>
-        <li>Technical planning and migration strategy development</li>
-        <li>Requirements gathering and stakeholder communication</li>
-        <li>Documentation and technical presentation skills</li>
+        <li>Technical writing and documentation</li>
+        <li>System architecture analysis</li>
+        <li>Technical alternative comparison</li>
+        <li>Technical diagramming</li>
+        <li>Technical stakeholder communication</li>
       </ul>
     `
   }
 ];
 
 // Categories derived from blog posts
-const categories = ['All', ...new Set(blogPosts.map(post => post.category))];
+const categories = ['All', ...Array.from(new Set(blogPosts.map(post => post.category)))];
 
 const Blog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [filteredPosts, setFilteredPosts] = useState(blogPosts);
   const [selectedPost, setSelectedPost] = useState<typeof blogPosts[0] | null>(null);
   
-  // Filter posts when category changes
+  const updateCategory = useCallback((category: string) => {
+    setSelectedCategory(category);
+  }, []);
+  
   useEffect(() => {
     if (selectedCategory === 'All') {
       setFilteredPosts(blogPosts);
@@ -693,23 +942,51 @@ const Blog: React.FC = () => {
     }
   }, [selectedCategory]);
   
-  // Featured post
-  const featuredPost = blogPosts.find(post => post.featured);
+  const featuredPost = useMemo(() => blogPosts.find(post => post.featured), []);
   
-  // Open post detail
-  const openPostDetail = (post: typeof blogPosts[0]) => {
+  const openPostDetail = useCallback((post: typeof blogPosts[0]) => {
     setSelectedPost(post);
     document.body.style.overflow = 'hidden';
-  };
+  }, []);
   
-  // Close post detail
-  const closePostDetail = () => {
+  const closePostDetail = useCallback(() => {
     setSelectedPost(null);
     document.body.style.overflow = 'auto';
+  }, []);
+  
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  
+  const shapeAnimations = {
+    x: reducedMotion ? 0 : [0, 20, 0],
+    y: reducedMotion ? 0 : [0, 15, 0]
   };
+  
+  const [visibleCount, setVisibleCount] = useState(6);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && visibleCount < filteredPosts.length) {
+        setVisibleCount(prev => Math.min(prev + 6, filteredPosts.length));
+      }
+    }, { threshold: 0.1 });
+    
+    const sentinel = document.getElementById('load-more-sentinel');
+    if (sentinel) observer.observe(sentinel);
+    
+    return () => {
+      if (sentinel) observer.unobserve(sentinel);
+    };
+  }, [filteredPosts.length, visibleCount]);
+  
+  const reducedTransition = useMemo(() => ({
+    duration: reducedMotion ? 0 : 0.4,
+    ease: "easeOut"
+  }), [reducedMotion]);
   
   return (
     <PageContainer>
+      <CursorStyle />
+      
       <BackgroundShapes>
         <Shape 
           size="500px" 
@@ -759,26 +1036,109 @@ const Blog: React.FC = () => {
             ease: "easeInOut"
           }}
         />
+        
+        <DecorativeElement 
+          top="15%" 
+          left="20%" 
+          color="rgba(0, 113, 227, 0.1)" 
+          size="40px"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.6, 1, 0.6]
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        <DecorativeElement 
+          top="45%" 
+          left="85%" 
+          color="rgba(0, 113, 227, 0.1)" 
+          size="60px"
+          animate={{
+            scale: [1, 1.1, 1],
+            opacity: [0.4, 0.7, 0.4]
+          }}
+          transition={{
+            duration: 7,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        <DecorativeElement 
+          top="80%" 
+          left="30%" 
+          color="rgba(0, 113, 227, 0.1)" 
+          size="30px"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.3, 0.6, 0.3]
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        <DecorativeLine 
+          top="28%" 
+          left="-5%" 
+          width="200px" 
+          rotate="15deg" 
+          animate={{
+            opacity: [0.2, 0.4, 0.2]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        <DecorativeLine 
+          top="60%" 
+          left="75%" 
+          width="150px" 
+          rotate="-30deg" 
+          animate={{
+            opacity: [0.15, 0.3, 0.15]
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
       </BackgroundShapes>
       
       <ContentContainer>
-        <ProgressHeader title="Professional Experience" sectionId="blog" />
-        
-        <BlogHeader>
-          <BlogTitle>My Internship Journey</BlogTitle>
-          <BlogSubtitle>
-            Documenting my experiences, challenges and learnings during my internship at OTis Philippines Inc.
-          </BlogSubtitle>
-        </BlogHeader>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '40px' }}
+        >
+          <ProgressHeader 
+            title="My Internship Journey" 
+            sectionId="blog" 
+            subtitle="Documenting my experiences, challenges and learnings during my internship at OTis Philippines Inc."
+          />
+        </motion.div>
         
         <CategoryFilter>
           {categories.map(category => (
             <CategoryButton 
               key={category}
               active={selectedCategory === category}
-              onClick={() => setSelectedCategory(category)}
+              onClick={() => updateCategory(category)}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
+              className="category-button"
             >
               {category}
             </CategoryButton>
@@ -787,12 +1147,20 @@ const Blog: React.FC = () => {
         
         {featuredPost && selectedCategory === 'All' && (
           <FeaturedBlog
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
             transition={{ duration: 0.5 }}
             onClick={() => openPostDetail(featuredPost)}
+            className="blog-card"
           >
-            <FeaturedImage style={{ backgroundImage: `url(${featuredPost.image})` }} />
+            <FeaturedImageWrapper>
+              <LazyImage
+                src={featuredPost.image}
+                alt={featuredPost.title}
+              />
+              <ImageOverlay />
+            </FeaturedImageWrapper>
             <FeaturedContent>
               <FeaturedBadge>Featured</FeaturedBadge>
               <BlogCategory>{featuredPost.category}</BlogCategory>
@@ -810,29 +1178,19 @@ const Blog: React.FC = () => {
         <BlogGrid>
           {filteredPosts.length > 0 ? filteredPosts
             .filter(post => !post.featured || selectedCategory !== 'All')
+            .slice(0, visibleCount)
             .map((post, index) => (
-              <BlogCard
+              <MemoizedBlogCard 
                 key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                onClick={() => openPostDetail(post)}
-                whileHover={{ y: -8 }}
-              >
-                <BlogImage style={{ backgroundImage: `url(${post.image})` }} />
-                <BlogContent>
-                  <BlogCategory>{post.category}</BlogCategory>
-                  <BlogPostTitle>{post.title}</BlogPostTitle>
-                  <BlogExcerpt>{post.excerpt}</BlogExcerpt>
-                  <MetaInfo>
-                    <DateInfo>
-                      <span role="img" aria-label="calendar">📅</span> {post.date}
-                    </DateInfo>
-                  </MetaInfo>
-                </BlogContent>
-              </BlogCard>
+                post={post}
+                index={index}
+                openPostDetail={openPostDetail}
+              />
             )) : (
             <NoResults>No posts found in this category</NoResults>
+          )}
+          {visibleCount < filteredPosts.filter(post => !post.featured || selectedCategory !== 'All').length && (
+            <div id="load-more-sentinel" style={{ height: "20px", width: "100%" }} />
           )}
         </BlogGrid>
       </ContentContainer>
@@ -844,18 +1202,23 @@ const Blog: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closePostDetail}
+            className="modal-overlay"
+            style={{ cursor: 'default !important' }}
           >
             <ModalContent
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", damping: 20, stiffness: 300 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 250 }}
               onClick={(e) => e.stopPropagation()}
+              style={{ cursor: 'default !important' }}
             >
               <CloseButton
                 onClick={closePostDetail}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
+                className="modal-close"
+                style={{ cursor: 'pointer !important' }}
               >
                 ✕
               </CloseButton>
@@ -870,7 +1233,7 @@ const Blog: React.FC = () => {
                 </PostMeta>
               </PostHeader>
               
-              <PostImage style={{ backgroundImage: `url(${selectedPost.image})` }} />
+              <PostImage src={selectedPost.image} />
               
               <PostContent dangerouslySetInnerHTML={{ __html: selectedPost.content }} />
             </ModalContent>
@@ -881,4 +1244,4 @@ const Blog: React.FC = () => {
   );
 };
 
-export default Blog; 
+export default React.memo(Blog); 

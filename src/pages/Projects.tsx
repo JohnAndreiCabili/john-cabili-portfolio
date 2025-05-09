@@ -343,7 +343,6 @@ const categories = [
   { id: "ml", label: "AI & ML" }
 ];
 
-// Custom detail panel with high-priority z-index to ensure it displays above all elements
 const DetailPanel = styled(motion.div)`
   position: fixed;
   top: 0;
@@ -688,7 +687,11 @@ const Projects: React.FC = () => {
       
       <PageContainer>
         <ProjectsHeader>
-          <ProgressHeader title="Projects" sectionId="projects" />
+          <ProgressHeader 
+            title="Projects" 
+            sectionId="projects" 
+            subtitle="My work and technical achievements."
+          />
         </ProjectsHeader>
         
         {/* Category filters */}

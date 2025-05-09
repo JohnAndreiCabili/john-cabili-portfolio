@@ -247,7 +247,7 @@ const Header = () => {
               Blog
             </NavItem>
             <NavItem 
-              to="/"
+              to="#"
               active={activeSection === 'contact'}
               onClick={(e) => {
                 e.preventDefault();
