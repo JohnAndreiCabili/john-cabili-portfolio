@@ -94,5 +94,5 @@ If you need to create a production build:
 ## Contact Information
 
 For technical assistance or inquiries:
-- Email: johnandreicabili@gmail.com
+- Email: cabilijohnandrei@gmail.com
 - GitHub: https://github.com/JohnAndreiCabili
