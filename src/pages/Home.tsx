@@ -602,7 +602,7 @@ const Home: React.FC = memo(() => {
     }
   }, [blobTransform]);
   
-  // Handle mouse movement with debounce for better performance
+  // Handle mouse movement
   useEffect(() => {
     let debounceTimer: NodeJS.Timeout;
     

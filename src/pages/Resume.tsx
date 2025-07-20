@@ -1222,6 +1222,14 @@ const Resume: React.FC = () => {
                     <div 
                       data-iframe-width="150" 
                       data-iframe-height="270" 
+                      data-share-badge-id="789be343-ee18-4731-8a0d-665a03074f49" 
+                      data-share-badge-host="https://www.credly.com">
+                    </div>
+                  </Badge>
+                  <Badge>
+                    <div 
+                      data-iframe-width="150" 
+                      data-iframe-height="270" 
                       data-share-badge-id="5343d218-6986-488d-8822-23f0ea071572" 
                       data-share-badge-host="https://www.credly.com">
                     </div>
