@@ -922,7 +922,7 @@ const About: React.FC = () => {
           <Subtitle
             variants={itemVariants}
           >
-            Frontend Developer with a passion for Data Science
+            Software Developer
           </Subtitle>
           <Location
             variants={itemVariants}
@@ -932,7 +932,7 @@ const About: React.FC = () => {
           <StoryText
             variants={itemVariants}
           >
-            I work with frontend development and have hands-on experience with component architecture, state management, and responsive design. I've also spent time exploring data science concepts through practical projects, focusing on building things that are both functional and user-friendly.
+            I work with software development, focusing on component architecture, state management, and responsive design. I build things that are both functional and user-friendly.
           </StoryText>
         </motion.div>
         
@@ -1157,7 +1157,7 @@ const About: React.FC = () => {
               marginRight: 'auto'
             }}
           >
-I build functional applications with a focus on creativity and practicality. I like finding simple, effective solutions that make sense in real-world use. My approach leans more on making things work well and look good.
+I build functional applications with a focus on creativity and practicality. I find simple, effective solutions that work well and look good.
           </StoryText>
         </motion.div>
         
@@ -1171,9 +1171,8 @@ I build functional applications with a focus on creativity and practicality. I l
             <StoryCardTitle>01</StoryCardTitle>
             <StoryCardContent>
               <strong>Thoughtful engineering</strong><br/><br/>
-              I try to build applications with care, keeping performance and readability in mind. I value solutions that 
-              load reasonably fast, use memory wisely, and apply practical data structures—with functions written to be 
-              clear and easy to maintain.
+              I build applications with care, keeping performance and readability in mind. I value solutions that 
+              load fast, use memory wisely, and are easy to maintain.
             </StoryCardContent>
           </StoryCard>
           
@@ -1186,8 +1185,8 @@ I build functional applications with a focus on creativity and practicality. I l
             <StoryCardTitle>02</StoryCardTitle>
             <StoryCardContent>
               <strong>Systematic approach</strong><br/><br/>
-              I believe that strong solutions come from well-organized processes. I make use of version control, set up basic CI/CD 
-              workflows, and rely on automated testing to help keep code stable and easier to maintain as projects grow.
+              I believe strong solutions come from well-organized processes. I use version control, CI/CD workflows, 
+              and automated testing to keep code stable and maintainable.
             </StoryCardContent>
           </StoryCard>
 
@@ -1200,8 +1199,8 @@ I build functional applications with a focus on creativity and practicality. I l
             <StoryCardTitle>03</StoryCardTitle>
             <StoryCardContent>
               <strong>Technical standards</strong><br/><br/>
-              I do my best to follow web standards and aim for consistent performance across browsers. This includes writing 
-              semantic HTML, using ARIA when needed, and applying reliable JavaScript techniques that hold up in different environments.
+              I follow web standards and aim for consistent performance across browsers. This includes writing 
+              semantic HTML, using ARIA when needed, and applying reliable JavaScript techniques.
             </StoryCardContent>
           </StoryCard>
 
@@ -1214,8 +1213,8 @@ I build functional applications with a focus on creativity and practicality. I l
             <StoryCardTitle>04</StoryCardTitle>
             <StoryCardContent>
               <strong>Continuous improvement</strong><br/><br/>
-              I like revisiting code to make it better over time. This includes running performance checks, trimming 
-              down bundle sizes, and adding helpful features like code splitting and lazy loading whenever they make sense.
+              I revisit code to make it better over time. This includes performance checks, optimizing bundle sizes, 
+              and adding features like code splitting and lazy loading.
             </StoryCardContent>
           </StoryCard>
         </PhilosophyGrid>
@@ -1247,11 +1246,11 @@ I build functional applications with a focus on creativity and practicality. I l
             transition={{ duration: 0.6 }}
           >
             <StoryCardContent>
-              My computer science education has included learning about algorithms, data structures, and basic system design. These concepts help me approach programming problems methodically.
+              My computer science education includes algorithms, data structures, and system design. These concepts help me approach programming problems methodically.
               <br /><br />
-              I've practiced building React components, working with hooks for state management, and implementing responsive designs. I'm familiar with the React component lifecycle and common optimization techniques.
+              I've built React components, worked with hooks for state management, and implemented responsive designs. I'm familiar with React lifecycle and optimization techniques.
               <br /><br />
-              In my projects, I enjoy exploring different libraries and frameworks to better understand frontend development patterns and best practices.
+              I explore different libraries and frameworks to understand software development patterns and best practices.
             </StoryCardContent>
           </StoryCard>
           
@@ -1263,17 +1262,17 @@ I build functional applications with a focus on creativity and practicality. I l
           >
             <StoryCardTitle>Professional Experience</StoryCardTitle>
             <StoryCardContent>
-              I worked as an intern at OTis Philippines Inc., where I contributed to research tasks for software development projects. My responsibilities included:
+              I worked as an intern at OTis Philippines Inc., contributing to research tasks for software development projects. My responsibilities included:
               <br /><br />
               • Researching payment systems integration and user management solutions
               <br />
               • Conducting technical evaluations of language detection technologies
               <br />
-              • Developing test scripts for frontend components
+              • Developing test scripts for software components
               <br />
               • Contributing to documentation for architecture decision records
               <br /><br />
-              This experience allowed me to apply my technical skills in a professional environment while learning about software development workflows and best practices.
+              This experience allowed me to apply my technical skills in a professional environment and learn about software development workflows.
             </StoryCardContent>
           </StoryCard>
           
@@ -1285,8 +1284,7 @@ I build functional applications with a focus on creativity and practicality. I l
           >
             <StoryCardTitle>Awards and Recognition</StoryCardTitle>
             <StoryCardContent>
-              During my learning journey, I've worked on several projects that have helped me develop my technical skills. 
-              These experiences have given me practical knowledge of development concepts.
+              I've worked on several projects that have helped me develop my technical skills and gain practical knowledge of development concepts.
               <br /><br />
               <ImageGrid>
                 <AwardImage 
@@ -1454,7 +1452,7 @@ I build functional applications with a focus on creativity and practicality. I l
               textAlign: 'center'
             }}
           >
-            When I'm not coding, these are some activities I enjoy that help me maintain balance and bring fresh perspectives to my work.
+            When I'm not coding, these are activities I enjoy that help me maintain balance and bring fresh perspectives to my work.
           </StoryText>
           
           <HobbyGrid>
@@ -1519,8 +1517,7 @@ I build functional applications with a focus on creativity and practicality. I l
         >
           <CTATitle>Let's build something together</CTATitle>
           <CTADescription>
-            I build applications using modern JavaScript frameworks,
-            state management solutions, and data processing techniques. If you have a project that needs 
+            I build applications using modern JavaScript frameworks and state management solutions. If you have a project that needs 
             implementation help, let's talk about working together.
           </CTADescription>
           <CTAButton 

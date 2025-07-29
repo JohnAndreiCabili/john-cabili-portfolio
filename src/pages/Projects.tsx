@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassCard } from '../components/GlassCard';
@@ -103,13 +103,7 @@ const CategoryFilters = styled.div`
   padding: 0 10px;
   
   @media (max-width: 768px) {
-    gap: 10px;
-    margin: 30px auto;
-  }
-  
-  @media (max-width: 480px) {
-    gap: 8px;
-    margin: 25px auto 35px;
+    display: none; /* Hide on mobile since we have mobile navigation */
   }
 `;
 
@@ -557,6 +551,59 @@ const ProjectStyles = () => {
   return null;
 };
 
+// Mobile navigation
+const MobileNavigation = styled.div<{ isFixed: boolean; scrollProgress: number }>`
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: flex;
+    overflow-x: auto;
+    padding: 16px 24px;
+    gap: 8px;
+    position: ${(props) => props.isFixed ? 'fixed' : 'relative'};
+    top: ${(props) => props.isFixed ? '0' : 'auto'};
+    left: ${(props) => props.isFixed ? '0' : 'auto'};
+    right: ${(props) => props.isFixed ? '0' : 'auto'};
+    z-index: ${(props) => props.isFixed ? '1000' : 'auto'};
+    background: ${(props) => props.isFixed ? 'rgba(255, 255, 255, 0.95)' : 'transparent'};
+    backdrop-filter: ${(props) => props.isFixed ? 'blur(12px)' : 'none'};
+    -webkit-backdrop-filter: ${(props) => props.isFixed ? 'blur(12px)' : 'none'};
+    border-bottom: ${(props) => props.isFixed ? '1px solid rgba(0, 113, 227, 0.1)' : 'none'};
+    box-shadow: ${(props) => props.isFixed ? '0 4px 20px rgba(0, 0, 0, 0.08)' : 'none'};
+    margin-bottom: ${(props) => props.isFixed ? '0' : '24px'};
+    transform: ${(props) => props.isFixed ? 'translateY(0)' : `translateY(${props.scrollProgress * -15}px)`};
+    opacity: ${(props) => props.isFixed ? '1' : Math.max(0.95, 1 - props.scrollProgress * 0.05)};
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Hide scrollbar but allow scrolling */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+`;
+
+const MobileNavButton = styled(motion.button)<{ active: boolean }>`
+  padding: 10px 16px;
+  background: ${(props) => props.active ? 'rgba(0, 113, 227, 0.1)' : 'transparent'};
+  border: 1px solid ${(props) => props.active ? 'var(--primary-color)' : 'rgba(0, 0, 0, 0.1)'};
+  border-radius: 30px;
+  color: ${(props) => props.active ? 'var(--primary-color)' : 'var(--text-dark)'};
+  font-size: 14px;
+  font-weight: ${(props) => props.active ? '600' : '400'};
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(0, 113, 227, 0.05);
+    transform: translateY(-2px);
+  }
+`;
+
 const Projects: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [filteredProjects, setFilteredProjects] = useState<Project[]>(projects);
@@ -564,12 +611,51 @@ const Projects: React.FC = () => {
   
   const isMounted = useRef(false);
   
+  // Mobile navigation states
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobileNavFixed, setIsMobileNavFixed] = useState(false);
+  const [mobileNavScrollProgress, setMobileNavScrollProgress] = useState(0);
+  const projectsTitleRef = useRef<HTMLDivElement>(null);
+  
   useEffect(() => {
     isMounted.current = true;
     return () => {
       isMounted.current = false;
     };
   }, []);
+  
+  // Mobile navigation logic
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isMobile && projectsTitleRef.current) {
+        const headerBottom = projectsTitleRef.current.offsetTop + projectsTitleRef.current.offsetHeight;
+        const scrollPosition = window.scrollY;
+        const transitionStart = headerBottom - 60; // Start transition 60px before header ends
+        const transitionEnd = headerBottom + 30; // End transition 30px after header ends
+        
+        if (scrollPosition >= transitionEnd) {
+          setIsMobileNavFixed(true);
+          setMobileNavScrollProgress(1);
+        } else if (scrollPosition >= transitionStart) {
+          setIsMobileNavFixed(false);
+          const progress = (scrollPosition - transitionStart) / (transitionEnd - transitionStart);
+          setMobileNavScrollProgress(progress);
+        } else {
+          setIsMobileNavFixed(false);
+          setMobileNavScrollProgress(0);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isMobile]);
   
   useEffect(() => {
     const filterTimer = setTimeout(() => {
@@ -686,13 +772,40 @@ const Projects: React.FC = () => {
       </BackgroundShapes>
       
       <PageContainer>
-        <ProjectsHeader>
+        <motion.div
+          ref={projectsTitleRef}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+        >
           <ProgressHeader 
             title="Projects" 
             sectionId="projects" 
             subtitle="My work and technical achievements."
           />
-        </ProjectsHeader>
+        </motion.div>
+        
+        {/* Mobile navigation */}
+        {isMobile && (
+          <MobileNavigation isFixed={isMobileNavFixed} scrollProgress={mobileNavScrollProgress}>
+            {categories.map((category, index) => (
+              <MobileNavButton
+                key={category.id}
+                active={activeCategory === category.id}
+                onClick={() => setActiveCategory(category.id)}
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                {category.id === 'all' ? '📋' : 
+                 category.id === 'web' ? '🌐' : 
+                 category.id === 'mobile' ? '📱' : 
+                 category.id === 'desktop' ? '💻' : 
+                 category.id === 'ml' ? '🤖' : '📦'} {category.label}
+              </MobileNavButton>
+            ))}
+          </MobileNavigation>
+        )}
         
         {/* Category filters */}
         <CategoryFilters>

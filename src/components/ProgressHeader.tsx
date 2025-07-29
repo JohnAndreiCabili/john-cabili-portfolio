@@ -38,13 +38,30 @@ const Title = styled(motion.h2)`
   }
 `;
 
-const Subtitle = styled.p`
+const Subtitle = styled.div`
   font-size: 18px;
   color: #64748b;
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
   font-weight: 400;
+`;
+
+const SubtitleLink = styled.a`
+  color: #0071e3;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  
+  &:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
 `;
 
 const ProgressLine = styled(motion.div)`
@@ -91,6 +108,39 @@ const ProgressHeader: React.FC<ProgressHeaderProps> = ({ title, sectionId, subti
     
     return () => window.removeEventListener('scroll', handleScroll);
   }, [sectionId]);
+
+  // Function to render subtitle with clickable links
+  const renderSubtitleWithLinks = (subtitleText: string) => {
+    const parts = subtitleText.split(' | ');
+    return parts.map((part, index) => {
+      if (part === 'GitHub') {
+        return (
+          <React.Fragment key={index}>
+            {index > 0 && ' | '}
+            <SubtitleLink href="https://github.com/JohnAndreiCabili" target="_blank" rel="noopener noreferrer">
+              GitHub
+            </SubtitleLink>
+          </React.Fragment>
+        );
+      } else if (part === 'Website') {
+        return (
+          <React.Fragment key={index}>
+            {index > 0 && ' | '}
+            <SubtitleLink href="https://john-cabili-portfolio.vercel.app" target="_blank" rel="noopener noreferrer">
+              Website
+            </SubtitleLink>
+          </React.Fragment>
+        );
+      } else {
+        return (
+          <React.Fragment key={index}>
+            {index > 0 && ' | '}
+            {part}
+          </React.Fragment>
+        );
+      }
+    });
+  };
   
   return (
     <HeaderContainer id={sectionId}>
@@ -105,7 +155,7 @@ const ProgressHeader: React.FC<ProgressHeaderProps> = ({ title, sectionId, subti
           transition={{ ease: "easeOut", duration: 0.2 }}
         />
       </Title>
-      {subtitle && <Subtitle>{subtitle}</Subtitle>}
+      {subtitle && <Subtitle>{renderSubtitleWithLinks(subtitle)}</Subtitle>}
     </HeaderContainer>
   );
 };

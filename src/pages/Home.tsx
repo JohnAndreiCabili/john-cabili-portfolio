@@ -52,6 +52,14 @@ const HeroRightSide = styled(motion.div)`
     order: 1;
     margin-bottom: 24px;
   }
+  
+  @media (max-width: 768px) {
+    margin-top: 40px;
+  }
+  
+  @media (max-width: 480px) {
+    margin-top: 60px;
+  }
 `;
 
 const BackgroundShapes = styled.div`
@@ -237,6 +245,16 @@ const IllustrationContainer = styled(motion.div)`
   margin: 0 auto;
   transform-style: preserve-3d;
   perspective: 1000px;
+  
+  @media (max-width: 768px) {
+    max-width: 320px;
+    height: 320px;
+  }
+  
+  @media (max-width: 480px) {
+    max-width: 280px;
+    height: 280px;
+  }
 `;
 
 const Illustration = styled(motion.div)`
@@ -355,6 +373,18 @@ const FloatingItem = styled(motion.div)<{ top: string; left: string; size: strin
   overflow: hidden;
   cursor: pointer;
   
+  @media (max-width: 768px) {
+    width: calc(${props => props.size} * 0.7);
+    height: calc(${props => props.size} * 0.7);
+    font-size: calc(${props => props.size} * 0.35);
+  }
+  
+  @media (max-width: 480px) {
+    width: calc(${props => props.size} * 0.6);
+    height: calc(${props => props.size} * 0.6);
+    font-size: calc(${props => props.size} * 0.3);
+  }
+  
   &::after {
     content: '';
     position: absolute;
@@ -389,18 +419,36 @@ const SkillContent = styled(motion.div)`
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 24px;
+  padding: 24px 24px 60px 24px;
   color: white;
   border-radius: inherit;
   background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(5px);
   z-index: 2;
+  
+  @media (max-width: 768px) {
+    padding: 20px 20px 50px 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 16px 16px 40px 16px;
+  }
 `;
 
 const SkillIcon = styled(motion.div)`
   font-size: 56px;
   margin-bottom: 16px;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  
+  @media (max-width: 768px) {
+    font-size: 42px;
+    margin-bottom: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
 `;
 
 const SkillTitle = styled(motion.h3)`
@@ -408,6 +456,16 @@ const SkillTitle = styled(motion.h3)`
   font-weight: 700;
   margin-bottom: 10px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
 `;
 
 const SkillDescription = styled(motion.p)`
@@ -417,6 +475,16 @@ const SkillDescription = styled(motion.p)`
   max-width: 300px;
   opacity: 0.9;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+    max-width: 250px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 12px;
+    max-width: 220px;
+  }
 `;
 
 const BackButton = styled(motion.button)`
@@ -459,7 +527,7 @@ const skillsData: Skill[] = [
     id: 'react',
     icon: '⚛️',
     title: 'React Development',
-    description: 'Building powerful, interactive UIs with modern React, hooks, and state management for seamless user experiences.',
+    description: 'Building interactive UIs with React, hooks, and modern state management.',
     background: 'linear-gradient(135deg, #5ac8fa, #0071e3)',
     floatingPosition: {
       top: '5%',
@@ -471,7 +539,7 @@ const skillsData: Skill[] = [
     id: 'design',
     icon: '📊',
     title: 'Data Science',
-    description: 'Transforming raw data into meaningful insights through statistical analysis, machine learning, and visualization techniques.',
+    description: 'Transforming data into insights through ML and statistical analysis.',
     background: 'linear-gradient(135deg, #5e5ce6, #af52de)',
     floatingPosition: {
       top: '15%',
@@ -483,7 +551,7 @@ const skillsData: Skill[] = [
     id: 'code',
     icon: '💻',
     title: 'Frontend Development',
-    description: 'Translating designs into responsive, performant code with modern JavaScript, TypeScript and web technologies.',
+    description: 'Creating responsive, performant web applications with modern JavaScript.',
     background: 'linear-gradient(135deg, #34c759, #5ac8fa)',
     floatingPosition: {
       top: '85%',
@@ -495,7 +563,7 @@ const skillsData: Skill[] = [
     id: 'mobile',
     icon: '📱',
     title: 'Mobile Development',
-    description: 'Developing cross-platform mobile apps with React Native and modern mobile development frameworks.',
+    description: 'Building cross-platform mobile apps with React Native.',
     background: 'linear-gradient(135deg, #af52de, #5e5ce6)',
     floatingPosition: {
       top: '70%',
@@ -507,7 +575,7 @@ const skillsData: Skill[] = [
     id: 'api',
     icon: '🔌',
     title: 'API Integration',
-    description: 'Connecting frontend applications with backend services through RESTful and GraphQL APIs.',
+    description: 'Connecting frontend apps with backend services via REST and GraphQL.',
     background: 'linear-gradient(135deg, #4cd964, #30b845)',
     floatingPosition: {
       top: '30%',
@@ -519,7 +587,7 @@ const skillsData: Skill[] = [
     id: 'perf',
     icon: '⚡',
     title: 'Performance Optimization',
-    description: 'Enhancing app speed and efficiency through code splitting, lazy loading, and modern optimization techniques.',
+    description: 'Enhancing app speed through code splitting and optimization.',
     background: 'linear-gradient(135deg, #ffcc00, #ff9500)',
     floatingPosition: {
       top: '50%',

@@ -18,11 +18,18 @@ const ChatWidget = styled(motion.div)`
   position: fixed;
   bottom: 24px;
   right: 24px;
-  z-index: 1000;
+  z-index: 1001;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-end;
+  gap: 12px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  @media (max-width: 768px) {
+    bottom: 20px;
+    right: 20px;
+    gap: 10px;
+  }
 `;
 
 const ChatButton = styled(motion.button)`
@@ -44,6 +51,42 @@ const ChatButton = styled(motion.button)`
   
   &:hover {
     box-shadow: 0 10px 40px rgba(0, 113, 227, 0.4);
+  }
+  
+  @media (max-width: 768px) {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+`;
+
+const ScrollToTopButton = styled(motion.button)`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(0, 113, 227, 0.9);
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  font-size: 24px;
+  outline: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  
+  &:hover {
+    background: var(--primary-color);
+    transform: translateY(-3px);
+  }
+  
+  @media (max-width: 768px) {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
   }
 `;
 
@@ -72,10 +115,14 @@ const ChatContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   border: 1px solid rgba(255, 255, 255, 0.8);
+  position: absolute;
+  bottom: 60px;
+  right: 0;
 
   @media (max-width: 480px) {
     width: 320px;
     height: 540px;
+    bottom: 50px;
   }
 `;
 
@@ -369,6 +416,7 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
   const [isChatOpen, setIsChatOpen] = useState(openChat);
   const [showWelcomeTooltip, setShowWelcomeTooltip] = useState(false);
   const [currentContextPrompts, setCurrentContextPrompts] = useState<{ text: string, response: string }[]>([]);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatMessagesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -815,6 +863,46 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
     };
   }, [isChatOpen]);
 
+  // Show scroll to top button when user scrolls down
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    const toggleScrollToTop = () => {
+      clearTimeout(timeoutId);
+      
+      timeoutId = setTimeout(() => {
+        const scrollPosition = window.pageYOffset;
+        const currentState = showScrollToTop;
+        
+        // Add hysteresis to prevent rapid toggling
+        if (currentState && scrollPosition < 400) {
+          setShowScrollToTop(false);
+        } else if (!currentState && scrollPosition > 500) {
+          setShowScrollToTop(true);
+        }
+        
+        // Hide welcome tooltip when scrolling down
+        if (scrollPosition > 100) {
+          setShowWelcomeTooltip(false);
+        }
+      }, 150); // Increased debounce time for more stability
+    };
+    
+    window.addEventListener('scroll', toggleScrollToTop, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', toggleScrollToTop);
+      clearTimeout(timeoutId);
+    };
+  }, [showScrollToTop]);
+
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
   return (
     <ChatWidget>
       <AnimatePresence>
@@ -924,7 +1012,7 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
       </AnimatePresence>
       
       <AnimatePresence>
-        {showWelcomeTooltip && !isChatOpen && (
+        {showWelcomeTooltip && !isChatOpen && !showScrollToTop && (
           <WelcomeTooltip
             initial={{ opacity: 0, scale: 0.9, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -935,19 +1023,41 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
         )}
       </AnimatePresence>
       
-      <ChatButton
-        className="chat-toggle-button"
-        onClick={(e) => {
-          e.stopPropagation(); // Stop event propagation
-          console.log("Chat button clicked");
-          toggleChat();
-        }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        {isChatOpen ? '✕' : '💬'}
-        <StatusIndicator />
-      </ChatButton>
+      <AnimatePresence mode="wait">
+        {showScrollToTop ? (
+          <ScrollToTopButton
+            key="scroll-to-top"
+            onClick={scrollToTop}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+          >
+            ↑
+          </ScrollToTopButton>
+        ) : (
+          <ChatButton
+            key="chat-button"
+            className="chat-toggle-button"
+            onClick={(e) => {
+              e.stopPropagation(); // Stop event propagation
+              console.log("Chat button clicked");
+              toggleChat();
+            }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+          >
+            {isChatOpen ? '✕' : '💬'}
+            <StatusIndicator />
+          </ChatButton>
+        )}
+      </AnimatePresence>
     </ChatWidget>
   );
 });

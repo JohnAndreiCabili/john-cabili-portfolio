@@ -20,7 +20,7 @@ const Button = styled(motion.button)`
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  z-index: 999;
+  z-index: 1001;
   
   &:hover {
     background-color: var(--primary-color);

@@ -213,6 +213,9 @@ const StyledSection = styled(motion.section)`
   &:first-of-type {
     padding-top: 40px;
     min-height: auto;
+    @media (max-width: 768px) {
+      margin-top: 20px;
+    }
   }
   
   &:last-child {
@@ -561,15 +564,28 @@ const DownloadButton = styled.div`
 `;
 
 // Mobile navigation
-const MobileNavigation = styled.div`
+const MobileNavigation = styled.div<{ isFixed: boolean; scrollProgress: number }>`
   display: none;
   
   @media (max-width: 768px) {
     display: flex;
     overflow-x: auto;
-    padding-bottom: 16px;
-    margin-bottom: 24px;
+    padding: 16px 24px;
     gap: 8px;
+    position: ${(props) => props.isFixed ? 'fixed' : 'relative'};
+    top: ${(props) => props.isFixed ? '0' : 'auto'};
+    left: ${(props) => props.isFixed ? '0' : 'auto'};
+    right: ${(props) => props.isFixed ? '0' : 'auto'};
+    z-index: ${(props) => props.isFixed ? '1000' : 'auto'};
+    background: ${(props) => props.isFixed ? 'rgba(255, 255, 255, 0.95)' : 'transparent'};
+    backdrop-filter: ${(props) => props.isFixed ? 'blur(12px)' : 'none'};
+    -webkit-backdrop-filter: ${(props) => props.isFixed ? 'blur(12px)' : 'none'};
+    border-bottom: ${(props) => props.isFixed ? '1px solid rgba(0, 113, 227, 0.1)' : 'none'};
+    box-shadow: ${(props) => props.isFixed ? '0 4px 20px rgba(0, 0, 0, 0.08)' : 'none'};
+    margin-bottom: ${(props) => props.isFixed ? '0' : '24px'};
+    transform: ${(props) => props.isFixed ? 'translateY(0)' : `translateY(${props.scrollProgress * -15}px)`};
+    opacity: ${(props) => props.isFixed ? '1' : Math.max(0.95, 1 - props.scrollProgress * 0.05)};
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     
     /* Hide scrollbar but allow scrolling */
     scrollbar-width: none;
@@ -582,12 +598,12 @@ const MobileNavigation = styled.div`
 
 const MobileNavButton = styled(motion.button)<{ active: boolean }>`
   padding: 10px 16px;
-  background: ${props => props.active ? 'rgba(0, 113, 227, 0.1)' : 'transparent'};
-  border: 1px solid ${props => props.active ? 'var(--primary-color)' : 'rgba(0, 0, 0, 0.1)'};
+  background: ${(props) => props.active ? 'rgba(0, 113, 227, 0.1)' : 'transparent'};
+  border: 1px solid ${(props) => props.active ? 'var(--primary-color)' : 'rgba(0, 0, 0, 0.1)'};
   border-radius: 30px;
-  color: ${props => props.active ? 'var(--primary-color)' : 'var(--text-dark)'};
+  color: ${(props) => props.active ? 'var(--primary-color)' : 'var(--text-dark)'};
   font-size: 14px;
-  font-weight: ${props => props.active ? '600' : '400'};
+  font-weight: ${(props) => props.active ? '600' : '400'};
   display: flex;
   align-items: center;
   gap: 6px;
@@ -711,6 +727,42 @@ const Resume: React.FC = () => {
   const [sidebarOffset, setSidebarOffset] = useState(300);
   const [headerHeight, setHeaderHeight] = useState(80);
   const resumeTitleRef = useRef<HTMLDivElement>(null);
+  // Add isMobile state
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobileNavFixed, setIsMobileNavFixed] = useState(false);
+  const [mobileNavScrollProgress, setMobileNavScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isMobile && resumeTitleRef.current) {
+        const headerBottom = resumeTitleRef.current.offsetTop + resumeTitleRef.current.offsetHeight;
+        const scrollPosition = window.scrollY;
+        const transitionStart = headerBottom - 60; // Start transition 60px before header ends
+        const transitionEnd = headerBottom + 30; // End transition 30px after header ends
+        
+        if (scrollPosition >= transitionEnd) {
+          setIsMobileNavFixed(true);
+          setMobileNavScrollProgress(1);
+        } else if (scrollPosition >= transitionStart) {
+          setIsMobileNavFixed(false);
+          const progress = (scrollPosition - transitionStart) / (transitionEnd - transitionStart);
+          setMobileNavScrollProgress(progress);
+        } else {
+          setIsMobileNavFixed(false);
+          setMobileNavScrollProgress(0);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isMobile]);
   
   const handleViewPDF = () => {
     const pdfUrl = "/assets/documents/Resume - John Andrei C. Cabili.pdf";
@@ -735,11 +787,13 @@ const Resume: React.FC = () => {
     const sectionElement = sectionRefs.current[sectionId];
     if (sectionElement) {
       const currentHeaderHeight = headerHeight + 20;
-      
-      window.scrollTo({
-        top: sectionElement.offsetTop - currentHeaderHeight,
-        behavior: 'smooth'
-      });
+      // Add a small timeout for mobile to ensure the section is rendered
+      setTimeout(() => {
+        window.scrollTo({
+          top: sectionElement.offsetTop - currentHeaderHeight,
+          behavior: 'smooth'
+        });
+      }, 50);
     }
     
     if (timeoutRef.current) {
@@ -983,63 +1037,63 @@ const Resume: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '100px' }}
+          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
         >
           <ProgressHeader 
-            title="My Resume" 
-            sectionId="resume" 
-            subtitle="An overview of my experience and technical skills."
+            title="JOHN ANDREI C. CABILI"
+            sectionId="resume"
+            subtitle="City of Manila, Metro Manila | cabilijohnandrei@gmail.com | 0929-802-6388 | GitHub | Website"
           />
         </motion.div>
         
         {/* Mobile navigation */}
-        <MobileNavigation>
-          {sections.map((section, index) => (
-            <MobileNavButton
-              key={section.id}
-              active={activeSection === index}
-              onClick={() => scrollToSection(section.id)}
-              whileHover={{ y: -3 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              {section.icon} {section.label}
-            </MobileNavButton>
-          ))}
-        </MobileNavigation>
-        
+        {isMobile && (
+          <MobileNavigation isFixed={isMobileNavFixed} scrollProgress={mobileNavScrollProgress}>
+            {sections.map((section, index) => (
+              <MobileNavButton
+                key={section.id}
+                active={activeSection === index}
+                onClick={() => scrollToSection(section.id)}
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                {section.icon} {section.label}
+              </MobileNavButton>
+            ))}
+          </MobileNavigation>
+        )}
         {/* Main content layout */}
         <ResumeLayout>
           <SidebarPlaceholder />
-          
-          <Sidebar style={{ top: `${sidebarOffset}px` }}>
-            <NavContainer
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              {sections.map((section, index) => (
-                <NavItem 
-                  key={section.id}
-                  active={activeSection === index}
-                  onClick={() => scrollToSection(section.id)}
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <NavIcon>{section.icon}</NavIcon>
-                  {section.label}
-                </NavItem>
-              ))}
-              
-              <div style={{ padding: '10px 0 0 0', margin: '10px 0 0 0', borderTop: '1px solid rgba(0, 113, 227, 0.1)' }}>
-                <div style={{ padding: '14px 16px' }}>
-                  <AppleButton variant="primary" onClick={handleViewPDF}>
-                    View in PDF
-                  </AppleButton>
+          {!isMobile && (
+            <Sidebar style={{ top: `${sidebarOffset}px` }}>
+              <NavContainer
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                {sections.map((section, index) => (
+                  <NavItem 
+                    key={section.id}
+                    active={activeSection === index}
+                    onClick={() => scrollToSection(section.id)}
+                    whileHover={{ x: 5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <NavIcon>{section.icon}</NavIcon>
+                    {section.label}
+                  </NavItem>
+                ))}
+                <div style={{ padding: '10px 0 0 0', margin: '10px 0 0 0', borderTop: '1px solid rgba(0, 113, 227, 0.1)' }}>
+                  <div style={{ padding: '14px 16px' }}>
+                    <AppleButton variant="primary" onClick={handleViewPDF}>
+                      View in PDF
+                    </AppleButton>
+                  </div>
                 </div>
-              </div>
-            </NavContainer>
-          </Sidebar>
-          
+              </NavContainer>
+            </Sidebar>
+          )}
           <MainContent>
             <SectionsContainer>
               {/* Education Section */}
@@ -1051,10 +1105,9 @@ const Resume: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                style={{ marginTop: '-80px' }}
+                style={{ marginTop: '-40px' }}
               >
                 <SectionTitle>Education</SectionTitle>
-                
                 <EducationCard
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -1076,15 +1129,16 @@ const Resume: React.FC = () => {
                   </EducationIcon>
                   <EducationContent>
                     <SchoolName>Adamson University</SchoolName>
-                    <Degree>Bachelor of Science in Computer Science</Degree>
-                    <DateBadge>2021 - Present</DateBadge>
-                    <Description>Focused on software development and mobile applications</Description>
-                    <Description>Participated in research competitions</Description>
+                    <Degree>Bachelor of Science in Computer Science (with Specialization in Web Science)</Degree>
+                    <DateBadge>2021 - 2025</DateBadge>
+                    <Description>Honors: Summa Cum Laude; Top 2 Performing Computer Science Student</Description>
+                    <Description>Academic Distinctions: Academic Scholar; Dean’s Lister, 7 consecutive semesters</Description>
+                    <Description>Relevant Coursework: Web Development, Mobile App Development, Software Engineering, Machine Learning, Cybersecurity Fundamentals, Data Structures and Algorithms, and Cloud and API Integration</Description>
                   </EducationContent>
                 </EducationCard>
               </StyledSection>
               
-              {/* Skills Section */}
+              {/* Technical Skills Section */}
               <StyledSection 
                 id="skills-section" 
                 ref={(el) => {
@@ -1096,33 +1150,83 @@ const Resume: React.FC = () => {
                 style={{ marginTop: '-20px' }}
               >
                 <SectionTitle>Technical Skills</SectionTitle>
-                
-                <h3 style={{ fontSize: '20px', marginBottom: '20px', fontWeight: 600 }}>Programming Languages</h3>
+                <h3 style={{ fontSize: '20px', marginBottom: '20px', fontWeight: 600 }}>Languages &amp; Markup</h3>
                 <SkillsGrid>
-                  {programmingSkills.map((skill, index) => (
+                  {['Kotlin', 'Dart', 'Python', 'Java', 'TypeScript', 'HTML/CSS', 'PHP'].map((skill, index) => (
                     <SkillCard
-                      key={skill.name}
+                      key={skill}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                      <SkillIcon>{skill.icon}</SkillIcon>
-                      <SkillName>{skill.name}</SkillName>
+                      <SkillIcon>{
+                        skill === 'Kotlin' ? '📱' :
+                        skill === 'Dart' ? '📊' :
+                        skill === 'Python' ? '🐍' :
+                        skill === 'Java' ? '☕' :
+                        skill === 'TypeScript' ? '🌐' :
+                        skill === 'HTML/CSS' ? '🎨' :
+                        skill === 'PHP' ? '🌀' :
+                        '💻'
+                      }</SkillIcon>
+                      <SkillName>{skill}</SkillName>
                     </SkillCard>
                   ))}
                 </SkillsGrid>
-                
-                <h3 style={{ fontSize: '20px', marginBottom: '20px', fontWeight: 600 }}>Technologies & Tools</h3>
+                <h3 style={{ fontSize: '20px', marginBottom: '20px', fontWeight: 600 }}>Frameworks &amp; Libraries</h3>
                 <SkillsGrid>
-                  {techSkills.map((skill, index) => (
+                  {['Jetpack Compose', 'Flutter', 'React', 'Next.js', 'TailwindCSS'].map((skill, index) => (
                     <SkillCard
-                      key={skill.name}
+                      key={skill}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 + 0.6 }}
                     >
-                      <SkillIcon>{skill.icon}</SkillIcon>
-                      <SkillName>{skill.name}</SkillName>
+                      <SkillIcon>{
+                        skill === 'Jetpack Compose' ? '📱' :
+                        skill === 'Flutter' ? '💙' :
+                        skill === 'React' ? '⚛️' :
+                        skill === 'Next.js' ? '⏭️' :
+                        skill === 'TailwindCSS' ? '🌬️' :
+                        '📦'
+                      }</SkillIcon>
+                      <SkillName>{skill}</SkillName>
+                    </SkillCard>
+                  ))}
+                </SkillsGrid>
+                <h3 style={{ fontSize: '20px', marginBottom: '20px', fontWeight: 600 }}>Tools &amp; Platforms</h3>
+                <SkillsGrid>
+                  {['Android Studio', 'Visual Studio', 'Git', 'GitHub', 'Power BI', 'MySQL'].map((skill, index) => (
+                    <SkillCard
+                      key={skill}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 + 1.2 }}
+                    >
+                      <SkillIcon>{
+                        skill === 'Android Studio' ? '🤖' :
+                        skill === 'Visual Studio' ? '🔧' :
+                        skill === 'Git' ? '🔄' :
+                        skill === 'GitHub' ? '🐙' :
+                        skill === 'Power BI' ? '📊' :
+                        skill === 'MySQL' ? '🗃️' :
+                        '🛠️'
+                      }</SkillIcon>
+                      <SkillName>{skill}</SkillName>
+                    </SkillCard>
+                  ))}
+                </SkillsGrid>
+                <h3 style={{ fontSize: '20px', marginBottom: '20px', fontWeight: 600 }}>Technologies &amp; APIs</h3>
+                <SkillsGrid>
+                  {['REST APIs', 'UI/UX Design', 'ML Model Integration', 'Technical Documentation'].map((skill, index) => (
+                    <SkillCard
+                      key={skill}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 + 1.8 }}
+                    >
+                      <SkillIcon>🛠️</SkillIcon>
+                      <SkillName>{skill}</SkillName>
                     </SkillCard>
                   ))}
                 </SkillsGrid>
@@ -1137,70 +1241,63 @@ const Resume: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
+                style={{ marginBottom: 100, minHeight: 100 }}
               >
-                <SectionTitle>Experience</SectionTitle>
-                
+                <SectionTitle>Professional Experience</SectionTitle>
                 <ExperienceContainer>
                   <ExperienceCard
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.05 }}
                   >
-                    <JobTitle>Student Intern</JobTitle>
+                    <JobTitle>Software Development and Artificial Intelligence Intern</JobTitle>
                     <Company><span>🏢</span> OTis Philippines Inc.</Company>
                     <DateBadge>2025</DateBadge>
-                    <Description>Conducted research on payment system integration and user access management</Description>
-                    <Description>Evaluated language detection technologies and implemented testing scripts</Description>
-                    <Description>Contributed to technical documentation and architecture decision records</Description>
+                    <Description>Conducted integration research on payment APIs and role-based access control (RBAC)</Description>
+                    <Description>Wrote and executed automated test scripts for language detection modules</Description>
+                    <Description>Contributed to technical documentation and architecture decision records for internal tools</Description>
                   </ExperienceCard>
-                  
+                </ExperienceContainer>
+              </StyledSection>
+              
+              {/* Project Experience Section */}
+              <StyledSection 
+                id="projects-section" 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                style={{ marginBottom: 100, minHeight: 100 }}
+              >
+                <SectionTitle>Project Experience</SectionTitle>
+                <ExperienceContainer>
+                  <ExperienceCard
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.05 }}
+                  >
+                    <JobTitle>Mangosoft: Philippine Mango Classification and Price Estimation</JobTitle>
+                    <Company><span>🏢</span> Mangosoft</Company>
+                    <DateBadge>2024</DateBadge>
+                    <Description>Developed a Kotlin-based Android app using Jetpack Compose for mango classification</Description>
+                    <Description>Integrated CNN for image processing and Random Forest for price estimation</Description>
+                    <Description>Implemented end-to-end ML pipeline and UI</Description>
+                    <Description><b>Awards:</b></Description>
+                    <Description>Best Research Paper, SIKAPTala 2025 National CS & IT Competition</Description>
+                    <Description>Best Research Project, CS Research Colloquium 2025</Description>
+                  </ExperienceCard>
                   <ExperienceCard
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
                   >
-                    <JobTitle>Philippine Mango Classification, Quality Assessment, and Price Estimation System</JobTitle>
-                    <Company><span>🏢</span> Mangosoft</Company>
-                    <DateBadge>2024</DateBadge>
-                    <Description>Developed responsive UI with Kotlin & Jetpack Compose</Description>
-                    <Description>Integrated machine learning models for mango classification and quality assessment with CNN, and price estimation with Random Forest Regression</Description>
-                    <Description>Won Best Research Paper and Best Research Project at SIKAPTala 2025 National CS & IT Competition</Description>
-                  </ExperienceCard>
-                  
-                  <ExperienceCard
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <JobTitle>VeriLuxe: Luxury Bag Authenticator</JobTitle>
-                    <Company><span>🏢</span> VeriLuxe</Company>
-                    <DateBadge>2024</DateBadge>
-                    <Description>Built Flutter & Dart interfaces for authentication workflows</Description>
-                    <Description>Implemented API integrations for real-time verification</Description>
-                  </ExperienceCard>
-                  
-                  <ExperienceCard
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    <JobTitle>OSCA Management System</JobTitle>
-                    <Company><span>🏢</span> Local Government Unit</Company>
+                    <JobTitle>OSCA (Office of Senior Citizen Affairs) Management System</JobTitle>
+                    <Company><span>🏢</span> Barangay 473, City of Manila</Company>
                     <DateBadge>2023</DateBadge>
-                    <Description>Created WinForms UI for senior citizen records management</Description>
-                    <Description>Implemented search and CRUD operations with C# and MySQL</Description>
-                  </ExperienceCard>
-                  
-                  <ExperienceCard
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                  >
-                    <JobTitle>Graphic Artist and Designer</JobTitle>
-                    <Company><span>🏢</span> Freelancing</Company>
-                    <DateBadge>2020-2022</DateBadge>
-                    <Description>Designed custom illustrations and marketing materials</Description>
-                    <Description>Created visual assets for various client projects</Description>
+                    <Description>Built a C# WinForms application for record management automation</Description>
+                    <Description>Implemented modular CRUD operations and real-time search functionality</Description>
+                    <Description>Optimized data workflows for senior citizen services in Barangay 473</Description>
+                    <Description><b>Recognition:</b></Description>
+                    <Description>Best in Academic Service Learning, Adamson University</Description>
                   </ExperienceCard>
                 </ExperienceContainer>
               </StyledSection>
@@ -1215,8 +1312,7 @@ const Resume: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <SectionTitle>Professional Certifications</SectionTitle>
-                
+                <SectionTitle>Certifications</SectionTitle>
                 <BadgeContainer>
                   <Badge>
                     <div 
@@ -1262,7 +1358,7 @@ const Resume: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                style={{ marginTop: '-300px' }}
+                style={{ marginTop: '0px' }}
               >
                 <SectionTitle>Awards & Recognition</SectionTitle>
                 

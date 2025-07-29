@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import Header from './Header';
-import ScrollToTop from './ScrollToTop';
+
 import PlayfulBackground from './PlayfulBackground';
 import CustomCursor from './CustomCursor';
 import GlobalStyle from '../styles/GlobalStyles';
@@ -58,7 +58,6 @@ const Layout: React.FC<LayoutProps> = memo(({ children }) => {
         {children}
       </Main>
       <Footer />
-      <ScrollToTop />
       <Contact />
     </>
   );
