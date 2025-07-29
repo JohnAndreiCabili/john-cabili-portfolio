@@ -49,6 +49,7 @@ const CustomCursor: React.FC = () => {
   const [hidden, setHidden] = useState(false);
   const requestRef = useRef<number | undefined>(undefined);
   const previousTimeRef = useRef<number>(0);
+  const [isMobile, setIsMobile] = useState(false);
   
   // Mouse position
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -59,6 +60,18 @@ const CustomCursor: React.FC = () => {
   // Lerp function for smooth movement
   const lerp = useCallback((start: number, end: number, amt: number) => {
     return (1 - amt) * start + amt * end;
+  }, []);
+  
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
   
   // Define animateCircle as a useCallback to use in useEffect deps
@@ -196,6 +209,11 @@ const CustomCursor: React.FC = () => {
     if (isHovered) return "hovered";
     return "default";
   };
+  
+  // Don't render custom cursor on mobile devices
+  if (isMobile) {
+    return null;
+  }
   
   return (
     <CursorWrapper>

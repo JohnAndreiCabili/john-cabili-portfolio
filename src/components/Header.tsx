@@ -100,12 +100,113 @@ const NavItem = styled(Link)<{ active: boolean }>`
   }
   
   @media (max-width: 768px) {
-    font-size: 0.9rem;
-    padding: 0.5rem 0.2rem;
+    display: none; /* Hide on mobile, will show in burger menu */
+  }
+`;
+
+// Burger menu components
+const BurgerButton = styled.button`
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1002;
+  
+  @media (max-width: 768px) {
+    display: flex;
   }
   
-  @media (max-width: 480px) {
-    font-size: 0.8rem;
+  &:focus {
+    outline: none;
+  }
+`;
+
+const BurgerLine = styled.span<{ isOpen: boolean }>`
+  width: 2rem;
+  height: 0.25rem;
+  background: ${props => props.isOpen ? '#0071e3' : '#555'};
+  opacity: 0.7;
+  border-radius: 10px;
+  transition: all 0.3s linear;
+  position: relative;
+  transform-origin: 1px;
+  
+  &:first-child {
+    transform: ${props => props.isOpen ? 'rotate(45deg)' : 'rotate(0)'};
+  }
+  
+  &:nth-child(2) {
+    opacity: ${props => props.isOpen ? '0' : '0.7'};
+    transform: ${props => props.isOpen ? 'translateX(20px)' : 'translateX(0)'};
+  }
+  
+  &:nth-child(3) {
+    transform: ${props => props.isOpen ? 'rotate(-45deg)' : 'rotate(0)'};
+  }
+`;
+
+const MobileMenu = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  @media (min-width: 769px) {
+    display: none;
+  }
+`;
+
+const MobileNavLinks = styled.ul`
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  gap: 2rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+`;
+
+const MobileNavItem = styled(Link)<{ active: boolean }>`
+  position: relative;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: ${props => (props.active ? '600' : '500')};
+  color: ${props => (props.active ? '#0071e3' : '#555')};
+  padding: 1rem 0;
+  transition: all 0.3s ease;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    width: ${props => (props.active ? '100%' : '0%')};
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(to right, #0071e3, #64acff);
+    transition: width 0.3s ease;
+    border-radius: 2px;
+  }
+  
+  &:hover {
+    color: #0071e3;
+    transform: scale(1.05);
+    
+    &::after {
+      width: 100%;
+    }
   }
 `;
 
@@ -114,6 +215,7 @@ const Header = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSection, setActiveSection] = useState('home');
   const [isProjectDetailOpen, setIsProjectDetailOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
   // Monitor body for detail-panel-open class
@@ -198,6 +300,17 @@ const Header = () => {
     }
   };
 
+  // Toggle mobile menu
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  // Close mobile menu when clicking on a link
+  const handleMobileNavClick = (section: string) => {
+    setIsMobileMenuOpen(false);
+    scrollToSection(section);
+  };
+
   return (
     <>
       <ProgressIndicator 
@@ -257,7 +370,73 @@ const Header = () => {
               Contact
             </NavItem>
           </NavLinks>
+          
+          <BurgerButton onClick={toggleMobileMenu}>
+            <BurgerLine isOpen={isMobileMenuOpen} />
+            <BurgerLine isOpen={isMobileMenuOpen} />
+            <BurgerLine isOpen={isMobileMenuOpen} />
+          </BurgerButton>
         </Nav>
+        
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <MobileMenu
+              initial={{ opacity: 0, x: '100%' }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            >
+              <MobileNavLinks>
+                <MobileNavItem 
+                  to="/" 
+                  active={activeSection === 'home'}
+                  onClick={() => handleMobileNavClick('home')}
+                >
+                  Home
+                </MobileNavItem>
+                <MobileNavItem 
+                  to="/about" 
+                  active={activeSection === 'about'}
+                  onClick={() => handleMobileNavClick('about')}
+                >
+                  About
+                </MobileNavItem>
+                <MobileNavItem 
+                  to="/resume" 
+                  active={activeSection === 'resume'}
+                  onClick={() => handleMobileNavClick('resume')}
+                >
+                  Resume
+                </MobileNavItem>
+                <MobileNavItem 
+                  to="/projects" 
+                  active={activeSection === 'projects'}
+                  onClick={() => handleMobileNavClick('projects')}
+                >
+                  Projects
+                </MobileNavItem>
+                <MobileNavItem 
+                  to="/blog" 
+                  active={activeSection === 'blog'}
+                  onClick={() => handleMobileNavClick('blog')}
+                >
+                  Blog
+                </MobileNavItem>
+                <MobileNavItem 
+                  to="#"
+                  active={activeSection === 'contact'}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleMobileNavClick('contact');
+                  }}
+                >
+                  Contact
+                </MobileNavItem>
+              </MobileNavLinks>
+            </MobileMenu>
+          )}
+        </AnimatePresence>
       </HeaderContainer>
     </>
   );
