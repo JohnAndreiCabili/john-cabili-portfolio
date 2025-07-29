@@ -27,6 +27,11 @@ const GlassCardContainer = styled.div<{ padding?: string; glowEffect?: boolean }
   height: 100%;
   width: 100%;
   
+  @media (max-width: 768px) {
+    padding: ${props => props.padding || '16px'};
+    border-radius: 16px;
+  }
+  
   &:hover {
     box-shadow: ${props => props.glowEffect ? 
       '0 15px 40px rgba(0, 113, 227, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.4)' : 

@@ -36,7 +36,7 @@ const Nav = styled.nav`
   padding: 1.2rem 2rem;
 
   @media (max-width: 768px) {
-    padding: 1rem 1.5rem;
+    padding: 0.8rem 1rem;
   }
 `;
 
@@ -49,6 +49,10 @@ const Logo = styled(Link)`
   background-clip: text;
   color: transparent;
   transition: transform 0.3s ease;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 
   &:hover {
     transform: scale(1.05);
@@ -109,8 +113,8 @@ const BurgerButton = styled.button`
   display: none;
   flex-direction: column;
   justify-content: space-around;
-  width: 2rem;
-  height: 2rem;
+  width: 1.8rem;
+  height: 1.8rem;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -127,8 +131,8 @@ const BurgerButton = styled.button`
 `;
 
 const BurgerLine = styled.span<{ isOpen: boolean }>`
-  width: 2rem;
-  height: 0.25rem;
+  width: 1.8rem;
+  height: 0.2rem;
   background: ${props => props.isOpen ? '#0071e3' : '#555'};
   opacity: 0.7;
   border-radius: 10px;
@@ -173,7 +177,7 @@ const MobileNavLinks = styled.ul`
   display: flex;
   flex-direction: column;
   list-style: none;
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: center;
   margin: 0;
   padding: 0;
@@ -182,10 +186,10 @@ const MobileNavLinks = styled.ul`
 const MobileNavItem = styled(Link)<{ active: boolean }>`
   position: relative;
   text-decoration: none;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: ${props => (props.active ? '600' : '500')};
   color: ${props => (props.active ? '#0071e3' : '#555')};
-  padding: 1rem 0;
+  padding: 0.6rem 0;
   transition: all 0.3s ease;
   
   &::after {

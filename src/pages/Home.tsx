@@ -113,6 +113,10 @@ const Title = styled(motion.h1)`
   @media (max-width: 768px) {
     font-size: 42px;
   }
+  
+  @media (max-width: 480px) {
+    font-size: 36px;
+  }
 `;
 
 const RoleWrapper = styled.div`
@@ -125,6 +129,14 @@ const RoleWrapper = styled.div`
   
   @media (max-width: 900px) {
     justify-content: center;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 18px;
   }
 `;
 
@@ -162,6 +174,14 @@ const Description = styled(motion.p)`
   @media (max-width: 900px) {
     margin-left: auto;
     margin-right: auto;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 17px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 16px;
   }
 `;
 
