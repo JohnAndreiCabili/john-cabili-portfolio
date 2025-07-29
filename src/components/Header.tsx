@@ -25,6 +25,10 @@ const HeaderContainer = styled(motion.header)`
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
   z-index: 1000;
   transition: all 0.3s ease;
+  
+  @media (max-width: 768px) {
+    z-index: 999;
+  }
 `;
 
 const Nav = styled.nav`
@@ -51,7 +55,11 @@ const Logo = styled(Link)`
   transition: transform 0.3s ease;
 
   @media (max-width: 768px) {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
   }
 
   &:hover {
@@ -113,8 +121,8 @@ const BurgerButton = styled.button`
   display: none;
   flex-direction: column;
   justify-content: space-around;
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 1.6rem;
+  height: 1.6rem;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -131,8 +139,8 @@ const BurgerButton = styled.button`
 `;
 
 const BurgerLine = styled.span<{ isOpen: boolean }>`
-  width: 1.8rem;
-  height: 0.2rem;
+  width: 1.6rem;
+  height: 0.15rem;
   background: ${props => props.isOpen ? '#0071e3' : '#555'};
   opacity: 0.7;
   border-radius: 10px;
@@ -186,10 +194,10 @@ const MobileNavLinks = styled.ul`
 const MobileNavItem = styled(Link)<{ active: boolean }>`
   position: relative;
   text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: ${props => (props.active ? '600' : '500')};
   color: ${props => (props.active ? '#0071e3' : '#555')};
-  padding: 0.6rem 0;
+  padding: 0.5rem 0;
   transition: all 0.3s ease;
   
   &::after {
@@ -255,18 +263,39 @@ const Header = () => {
       const progress = scrollTop / scrollHeight;
       setScrollProgress(progress);
 
-      // Hide header on scroll down, show on scroll up
-      if (scrollTop > 100) {
-        setIsHeaderVisible(scrollTop < lastScrollTop);
+      // Mobile-specific header behavior
+      if (window.innerWidth <= 768) {
+        // On mobile, only show header when at the top
+        setIsHeaderVisible(scrollTop <= 50);
       } else {
-        setIsHeaderVisible(true);
+        // Desktop behavior: hide on scroll down, show on scroll up
+        if (scrollTop > 100) {
+          setIsHeaderVisible(scrollTop < lastScrollTop);
+        } else {
+          setIsHeaderVisible(true);
+        }
       }
       lastScrollTop = scrollTop;
     };
 
+    const handleResize = () => {
+      // Re-evaluate header visibility when screen size changes
+      const scrollTop = window.pageYOffset;
+      if (window.innerWidth <= 768) {
+        setIsHeaderVisible(scrollTop <= 50);
+      } else {
+        setIsHeaderVisible(scrollTop <= 100);
+      }
+    };
+
     let lastScrollTop = 0;
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   // Update active section based on URL path

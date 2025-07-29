@@ -54,9 +54,15 @@ const ChatButton = styled(motion.button)`
   }
   
   @media (max-width: 768px) {
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
   }
 `;
 
@@ -84,9 +90,15 @@ const ScrollToTopButton = styled(motion.button)`
   }
   
   @media (max-width: 768px) {
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
   }
 `;
 
@@ -120,8 +132,8 @@ const ChatContainer = styled(motion.div)`
   right: 0;
 
   @media (max-width: 480px) {
-    width: 320px;
-    height: 540px;
+    width: 300px;
+    height: 500px;
     bottom: 50px;
   }
 `;

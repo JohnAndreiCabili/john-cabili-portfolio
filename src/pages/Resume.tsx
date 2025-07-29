@@ -644,6 +644,16 @@ const Badge = styled.div`
   padding-top: 15px;
   border: 1px solid rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
+  
+  @media (max-width: 768px) {
+    height: 220px;
+    padding-top: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    height: 200px;
+    padding-top: 10px;
+  }
 `;
 
 // Resume sections
@@ -715,7 +725,11 @@ const SectionTitle = styled.h2`
   }
   
   @media (max-width: 768px) {
-    font-size: 32px;
+    font-size: 28px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 24px;
   }
 `;
 

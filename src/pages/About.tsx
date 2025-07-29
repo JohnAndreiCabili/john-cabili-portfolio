@@ -61,8 +61,13 @@ const ProfileContainer = styled.div`
   margin: 0 auto;
   
   @media (max-width: 900px) {
-    max-width: 320px;
-    height: 320px;
+    max-width: 280px;
+    height: 280px;
+  }
+  
+  @media (max-width: 480px) {
+    max-width: 240px;
+    height: 240px;
   }
 `;
 
@@ -98,6 +103,16 @@ const SkillTag = styled(motion.div)<{ color: string; top: string; left: string; 
   gap: 8px;
   top: ${props => props.top};
   left: ${props => props.left};
+  
+  @media (max-width: 768px) {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
   z-index: 2;
 `;
 

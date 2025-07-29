@@ -89,7 +89,11 @@ const PageTitle = styled.h1`
   }
   
   @media (max-width: 768px) {
-    font-size: 2.5rem;
+    font-size: 2rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.8rem;
   }
 `;
 
@@ -207,6 +211,14 @@ const ProjectContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 `;
 
 const ProjectTitle = styled.h3`
@@ -214,6 +226,14 @@ const ProjectTitle = styled.h3`
   font-weight: 700;
   margin-bottom: 12px;
   color: var(--text-dark);
+  
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 16px;
+  }
 `;
 
 const ProjectDescription = styled.p`
@@ -222,6 +242,14 @@ const ProjectDescription = styled.p`
   color: #555;
   margin-bottom: 20px;
   flex: 1;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `;
 
 const TechStack = styled.div`
@@ -238,6 +266,16 @@ const TechTag = styled.span`
   font-size: 13px;
   color: var(--primary-color);
   font-weight: 500;
+  
+  @media (max-width: 768px) {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
 `;
 
 const EmptyState = styled.div`

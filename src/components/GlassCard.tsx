@@ -28,8 +28,13 @@ const GlassCardContainer = styled.div<{ padding?: string; glowEffect?: boolean }
   width: 100%;
   
   @media (max-width: 768px) {
-    padding: ${props => props.padding || '16px'};
-    border-radius: 16px;
+    padding: ${props => props.padding || '12px'};
+    border-radius: 14px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: ${props => props.padding || '10px'};
+    border-radius: 12px;
   }
   
   &:hover {

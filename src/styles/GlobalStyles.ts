@@ -111,15 +111,37 @@ const GlobalStyle = createGlobalStyle`
   /* Responsive typography */
   @media (max-width: 768px) {
     h1 {
-      font-size: 32px;
+      font-size: 28px;
     }
     
     h2 {
-      font-size: 28px;
+      font-size: 24px;
     }
 
     h3 {
-      font-size: 22px;
+      font-size: 20px;
+    }
+    
+    p {
+      font-size: 15px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 24px;
+    }
+    
+    h2 {
+      font-size: 20px;
+    }
+
+    h3 {
+      font-size: 18px;
+    }
+    
+    p {
+      font-size: 14px;
     }
   }
 

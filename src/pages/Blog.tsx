@@ -286,7 +286,11 @@ const FeaturedContent = styled.div`
   justify-content: center;
   
   @media (max-width: 768px) {
-    padding: 30px;
+    padding: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 16px;
   }
 `;
 
@@ -301,6 +305,16 @@ const FeaturedBadge = styled.span`
   display: inline-block;
   box-shadow: 0 5px 15px rgba(255, 45, 85, 0.2);
   align-self: flex-start;
+  
+  @media (max-width: 768px) {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
 `;
 
 const BlogCard = styled(motion.div)`
@@ -322,6 +336,14 @@ const BlogContent = styled.div`
   display: flex;
   flex-direction: column;
   background: white;
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 16px;
+  }
 `;
 
 const BlogCategory = styled.span`

@@ -96,6 +96,16 @@ const Greeting = styled(motion.div)`
   font-size: 16px;
   margin-bottom: 24px;
   box-shadow: 0 2px 10px rgba(0, 113, 227, 0.1);
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 13px;
+    padding: 5px 10px;
+  }
 `;
 
 const Title = styled(motion.h1)`
@@ -111,11 +121,11 @@ const Title = styled(motion.h1)`
   letter-spacing: -0.02em;
   
   @media (max-width: 768px) {
-    font-size: 42px;
+    font-size: 36px;
   }
   
   @media (max-width: 480px) {
-    font-size: 36px;
+    font-size: 28px;
   }
 `;
 
@@ -132,11 +142,11 @@ const RoleWrapper = styled.div`
   }
   
   @media (max-width: 768px) {
-    font-size: 20px;
+    font-size: 18px;
   }
   
   @media (max-width: 480px) {
-    font-size: 18px;
+    font-size: 16px;
   }
 `;
 
@@ -177,11 +187,11 @@ const Description = styled(motion.p)`
   }
   
   @media (max-width: 768px) {
-    font-size: 17px;
+    font-size: 15px;
   }
   
   @media (max-width: 480px) {
-    font-size: 16px;
+    font-size: 14px;
   }
 `;
 
@@ -228,6 +238,18 @@ const SocialMediaButton = styled(motion.a)`
   position: relative;
   overflow: hidden;
   
+  @media (max-width: 768px) {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+  
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
@@ -267,13 +289,13 @@ const IllustrationContainer = styled(motion.div)`
   perspective: 1000px;
   
   @media (max-width: 768px) {
-    max-width: 320px;
-    height: 320px;
+    max-width: 280px;
+    height: 280px;
   }
   
   @media (max-width: 480px) {
-    max-width: 280px;
-    height: 280px;
+    max-width: 240px;
+    height: 240px;
   }
 `;
 
@@ -292,6 +314,12 @@ const Illustration = styled(motion.div)`
     inset 0 -10px 30px rgba(0, 0, 0, 0.2);
   transform-style: preserve-3d;
   cursor: pointer;
+  
+  @media (max-width: 768px) {
+    box-shadow: 
+      0 12px 50px rgba(0, 113, 227, 0.25),
+      inset 0 -8px 20px rgba(0, 0, 0, 0.15);
+  }
   
   &::before {
     content: '';
@@ -344,6 +372,12 @@ const ProfileContent = styled(motion.div)`
     border-radius: inherit;
     z-index: 1;
   }
+  
+  @media (max-width: 768px) {
+    &::after {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
 `;
 
 const ProfileImage = styled(motion.div)`
@@ -373,6 +407,11 @@ const InteractText = styled(motion.div)`
   background: rgba(0, 0, 0, 0.08);
   border-radius: inherit;
   backdrop-filter: blur(1px);
+  
+  @media (max-width: 768px) {
+    background: transparent;
+    backdrop-filter: none;
+  }
 `;
 
 const FloatingItem = styled(motion.div)<{ top: string; left: string; size: string; background: string }>`
