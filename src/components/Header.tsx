@@ -265,11 +265,13 @@ const Header = () => {
 
       // Mobile-specific header behavior
       if (window.innerWidth <= 768) {
-        // On mobile, show header when scrolling up or near the top
-        if (scrollTop <= 30) {
+        // On mobile, show header only when very close to the top
+        if (scrollTop <= 20) {
+          // Only show when very close to top
           setIsHeaderVisible(true);
         } else {
-          setIsHeaderVisible(scrollTop < lastScrollTop);
+          // Keep hidden everywhere else
+          setIsHeaderVisible(false);
         }
       } else {
         // Desktop behavior: hide on scroll down, show on scroll up
@@ -286,7 +288,7 @@ const Header = () => {
       // Re-evaluate header visibility when screen size changes
       const scrollTop = window.pageYOffset;
       if (window.innerWidth <= 768) {
-        setIsHeaderVisible(scrollTop <= 30);
+        setIsHeaderVisible(scrollTop <= 20);
       } else {
         setIsHeaderVisible(scrollTop <= 100);
       }
