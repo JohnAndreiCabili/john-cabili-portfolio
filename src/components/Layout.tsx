@@ -15,15 +15,15 @@ interface LayoutProps {
 
 const Main = styled(motion.main)`
   min-height: 100vh;
-  padding: 50px 0 0;
+  padding: 60px 0 0;
   position: relative;
   
   @media (max-width: 768px) {
-    padding: 30px 0 0;
+    padding: 45px 0 0;
   }
   
   @media (max-width: 480px) {
-    padding: 20px 0 0;
+    padding: 35px 0 0;
   }
 `;
 
