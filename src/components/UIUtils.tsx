@@ -43,6 +43,28 @@ const ButtonContainer = styled(motion.button)<StyledButtonProps>`
   background: ${props => props.variant === 'primary' ? 'var(--primary-color)' : 'rgba(0, 0, 0, 0.05)'};
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   
+  @media (max-width: 768px) {
+    padding: ${props => 
+      props.size === 'small' ? '6px 12px' : 
+      props.size === 'large' ? '12px 24px' : '10px 20px'
+    };
+    font-size: ${props => 
+      props.size === 'small' ? '13px' : 
+      props.size === 'large' ? '16px' : '15px'
+    };
+  }
+  
+  @media (max-width: 480px) {
+    padding: ${props => 
+      props.size === 'small' ? '5px 10px' : 
+      props.size === 'large' ? '10px 20px' : '8px 16px'
+    };
+    font-size: ${props => 
+      props.size === 'small' ? '12px' : 
+      props.size === 'large' ? '15px' : '14px'
+    };
+  }
+  
   &::before {
     content: '';
     position: absolute;

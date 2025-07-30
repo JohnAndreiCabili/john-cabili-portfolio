@@ -8,6 +8,14 @@ const HeaderContainer = styled.div`
   text-align: center;
   position: relative;
   
+  @media (max-width: 768px) {
+    margin-bottom: 30px;
+  }
+  
+  @media (max-width: 480px) {
+    margin-bottom: 20px;
+  }
+  
   &::after {
     content: '';
     position: absolute;

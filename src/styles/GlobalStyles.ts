@@ -106,6 +106,14 @@ const GlobalStyle = createGlobalStyle`
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 22px;
+    
+    @media (max-width: 768px) {
+      padding: 0 16px;
+    }
+    
+    @media (max-width: 480px) {
+      padding: 0 12px;
+    }
   }
 
   /* Responsive typography */

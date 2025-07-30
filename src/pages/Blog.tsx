@@ -1,56 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, memo, useRef } from 'react';
-import styled, { createGlobalStyle, css } from 'styled-components';
+import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProgressHeader from '../components/ProgressHeader';
-
-const CursorStyle = createGlobalStyle`
-  /* Only apply specific cursor styles to interactive elements */
-  a, button, [role="button"], input[type="submit"], input[type="button"], 
-  .clickable, .category-button, .blog-card, .modal-close {
-    cursor: pointer !important;
-  }
-  
-  .modal-close {
-    cursor: pointer !important;
-    z-index: 100000 !important;
-  }
-  
-  .blog-card {
-    cursor: pointer !important;
-  }
-  
-  .category-button {
-    cursor: pointer !important;
-  }
-  
-  @media (prefers-reduced-motion: reduce) {
-    * {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
-`;
-
-const cardStyle = css`
-  background: white;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  border-radius: 20px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
-  &:hover {
-    box-shadow: 0 15px 40px rgba(0, 113, 227, 0.15);
-  }
-`;
-
-const textGradient = css`
-  background: linear-gradient(120deg, #0071e3, #1e88e5);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-`;
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -75,7 +26,6 @@ const Shape = styled(motion.div)<{ size: string; color: string; top: string; lef
   top: ${props => props.top};
   left: ${props => props.left};
   border-radius: 50%;
-  will-change: transform;
 `;
 
 const DecorativeElement = styled(motion.div)<{ top: string; left: string; color: string; size: string }>`
@@ -108,7 +58,11 @@ const ContentContainer = styled.div`
   z-index: 2;
   
   @media (max-width: 768px) {
-    padding: 100px 16px 60px;
+    padding: 30px 16px 40px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 20px 12px 30px;
   }
 `;
 
@@ -120,7 +74,7 @@ const CategoryFilter = styled.div`
   margin-bottom: 50px;
   
   @media (max-width: 768px) {
-    display: none; /* Hide on mobile since we have mobile navigation */
+    display: none;
   }
 `;
 
@@ -131,7 +85,7 @@ const MobileNavigation = styled.div<{ isFixed: boolean; scrollProgress: number }
   @media (max-width: 768px) {
     display: flex;
     overflow-x: auto;
-    padding: 16px 24px;
+    padding: 12px 24px;
     gap: 8px;
     position: ${(props) => props.isFixed ? 'fixed' : 'relative'};
     top: ${(props) => props.isFixed ? '0' : 'auto'};
@@ -143,7 +97,7 @@ const MobileNavigation = styled.div<{ isFixed: boolean; scrollProgress: number }
     -webkit-backdrop-filter: ${(props) => props.isFixed ? 'blur(12px)' : 'none'};
     border-bottom: ${(props) => props.isFixed ? '1px solid rgba(0, 113, 227, 0.1)' : 'none'};
     box-shadow: ${(props) => props.isFixed ? '0 4px 20px rgba(0, 0, 0, 0.08)' : 'none'};
-    margin-bottom: ${(props) => props.isFixed ? '0' : '24px'};
+    margin-bottom: ${(props) => props.isFixed ? '0' : '8px'};
     transform: ${(props) => props.isFixed ? 'translateY(0)' : `translateY(${props.scrollProgress * -15}px)`};
     opacity: ${(props) => props.isFixed ? '1' : Math.max(0.95, 1 - props.scrollProgress * 0.05)};
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -187,8 +141,6 @@ const CategoryButton = styled(motion.button)<{ active: boolean }>`
   border: 1px solid ${props => props.active ? 'var(--primary-color)' : 'rgba(0, 0, 0, 0.1)'};
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-bottom: 8px;
-  letter-spacing: normal;
   box-shadow: ${props => props.active ? '0 4px 12px rgba(0, 113, 227, 0.15)' : 'none'};
   transform: ${props => props.active ? 'translateY(-2px)' : 'none'};
   
@@ -200,19 +152,9 @@ const CategoryButton = styled(motion.button)<{ active: boolean }>`
     border-color: ${props => props.active ? 'var(--primary-color)' : 'rgba(0, 113, 227, 0.2)'};
   }
   
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);
-  }
-  
   @media (max-width: 768px) {
     padding: 7px 16px;
     font-size: 14px;
-  }
-  
-  @media (max-width: 480px) {
-    padding: 6px 12px;
-    font-size: 13px;
   }
 `;
 
@@ -224,7 +166,13 @@ const BlogGrid = styled.div`
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 20px;
+    margin-bottom: 30px;
   }
 `;
 
@@ -232,8 +180,18 @@ const FeaturedBlog = styled(motion.div)`
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  ${cardStyle}
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  overflow: hidden;
   margin-bottom: 50px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 15px 40px rgba(0, 113, 227, 0.15);
+    transform: translateY(-5px);
+  }
   
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
@@ -253,22 +211,20 @@ const ImageWrapper = styled.div`
 
 const FeaturedImageWrapper = styled(ImageWrapper)`
   height: 300px;
-  min-height: unset;
   
   @media (max-width: 900px) {
     height: 250px;
   }
 `;
 
-const OptimizedImage = styled.img`
+const BlogImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease, opacity 0.3s ease;
-  opacity: 0;
-  will-change: transform, opacity;
-  &.loaded {
-    opacity: 1;
+  transition: transform 0.5s ease;
+  
+  ${FeaturedBlog}:hover & {
+    transform: scale(1.05);
   }
 `;
 
@@ -310,22 +266,25 @@ const FeaturedBadge = styled.span`
     font-size: 12px;
     padding: 6px 10px;
   }
-  
-  @media (max-width: 480px) {
-    font-size: 11px;
-    padding: 5px 8px;
-  }
 `;
 
 const BlogCard = styled(motion.div)`
-  ${cardStyle}
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
-  cursor: pointer !important;
-  z-index: 5;
   
-  &:hover ${OptimizedImage} {
+  &:hover {
+    box-shadow: 0 15px 40px rgba(0, 113, 227, 0.15);
+    transform: translateY(-8px);
+  }
+  
+  &:hover ${BlogImage} {
     transform: scale(1.05);
   }
 `;
@@ -392,7 +351,18 @@ const DateInfo = styled.span`
   gap: 6px;
 `;
 
-const ModalOverlay = styled(motion.div)`
+const NoResults = styled.div`
+  text-align: center;
+  padding: 60px 20px;
+  color: #64748b;
+  font-size: 18px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+`;
+
+// Modal Components
+const ModalBackdrop = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
@@ -400,33 +370,18 @@ const ModalOverlay = styled(motion.div)`
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(5px);
-  z-index: 9999;
-  padding: 40px;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  will-change: opacity;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-  }
+  padding: 20px;
   
   @media (max-width: 768px) {
-    padding: 20px;
-  }
-  
-  @supports not (backdrop-filter: blur(5px)) {
-    background: rgba(0, 0, 0, 0.9);
+    padding: 10px;
   }
 `;
 
-const ModalContent = styled(motion.div)`
+const ModalCard = styled(motion.div)`
   background: white;
   border-radius: 24px;
   width: 100%;
@@ -435,18 +390,6 @@ const ModalContent = styled(motion.div)`
   overflow-y: auto;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
   position: relative;
-  will-change: transform, opacity;
-  pointer-events: auto !important;
-  cursor: auto !important;
-  
-  * {
-    pointer-events: auto !important;
-  }
-  
-  a, button, [role="button"], .clickable {
-    cursor: pointer !important;
-    pointer-events: auto !important;
-  }
   
   &::-webkit-scrollbar {
     width: 6px;
@@ -462,7 +405,7 @@ const ModalContent = styled(motion.div)`
   }
 `;
 
-const CloseButton = styled(motion.button)`
+const CloseButton = styled.button`
   position: absolute;
   top: 20px;
   right: 20px;
@@ -475,10 +418,15 @@ const CloseButton = styled(motion.button)`
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  cursor: pointer !important;
+  cursor: pointer;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  z-index: 100000;
-  pointer-events: auto !important;
+  z-index: 1001;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
 `;
 
 const PostHeader = styled.div`
@@ -493,7 +441,10 @@ const PostTitle = styled.h2`
   font-size: 36px;
   font-weight: 800;
   margin-bottom: 20px;
-  ${textGradient}
+  background: linear-gradient(120deg, #0071e3, #1e88e5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   
   @media (max-width: 768px) {
     font-size: 28px;
@@ -524,28 +475,11 @@ const PostImageContainer = styled.div`
   }
 `;
 
-const PostImageEl = styled.img`
+const PostImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.3s ease;
 `;
-
-const PostImage = memo(({ src }: { src: string }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  
-  return (
-    <PostImageContainer>
-      {!isLoaded && <SkeletonLoader />}
-      <PostImageEl 
-        src={src} 
-        alt="Post cover" 
-        onLoad={() => setIsLoaded(true)}
-        style={{ opacity: isLoaded ? 1 : 0 }}
-      />
-    </PostImageContainer>
-  );
-});
 
 const PostContent = styled.div`
   padding: 0 40px 40px;
@@ -585,95 +519,7 @@ const PostContent = styled.div`
   }
 `;
 
-const NoResults = styled.div`
-  text-align: center;
-  padding: 60px 20px;
-  color: #64748b;
-  font-size: 18px;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-`;
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
-};
-
-const SkeletonLoader = styled.div`
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(211, 211, 211, 0.2) 25%,
-    rgba(211, 211, 211, 0.24) 37%,
-    rgba(211, 211, 211, 0.2) 63%
-  );
-  background-size: 400% 100%;
-  animation: shimmer 1.5s infinite;
-  
-  @keyframes shimmer {
-    0% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0 50%;
-    }
-  }
-`;
-
-const LazyImage = memo(({ src, alt }: { src: string; alt: string }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  
-  return (
-    <>
-      {!isLoaded && <SkeletonLoader />}
-      <OptimizedImage 
-        src={src} 
-        alt={alt} 
-        loading="lazy" 
-        onLoad={() => setIsLoaded(true)}
-        className={isLoaded ? 'loaded' : ''}
-      />
-    </>
-  );
-});
-
-const MemoizedBlogCard = memo(({ post, index, openPostDetail }: { 
-  post: any, 
-  index: number, 
-  openPostDetail: (post: any) => void 
-}) => (
-  <BlogCard
-    key={post.id}
-    variants={cardVariants}
-    initial="hidden"
-    animate="visible"
-    transition={{ duration: 0.4, delay: index * 0.05 }}
-    onClick={() => openPostDetail(post)}
-    whileHover={{ y: -8 }}
-    className="blog-card"
-  >
-    <ImageWrapper>
-      <LazyImage
-        src={post.image}
-        alt={post.title}
-      />
-      <ImageOverlay />
-    </ImageWrapper>
-    <BlogContent>
-      <BlogCategory>{post.category}</BlogCategory>
-      <BlogPostTitle>{post.title}</BlogPostTitle>
-      <BlogExcerpt>{post.excerpt}</BlogExcerpt>
-      <MetaInfo>
-        <DateInfo>
-          <span role="img" aria-label="calendar">📅</span> {post.date}
-        </DateInfo>
-      </MetaInfo>
-    </BlogContent>
-  </BlogCard>
-));
-
+// Blog data
 const blogPosts = [
   {
     id: 1,
@@ -1012,7 +858,6 @@ const blogPosts = [
   }
 ];
 
-// Categories derived from blog posts
 const categories = ['All', ...Array.from(new Set(blogPosts.map(post => post.category)))];
 
 const Blog: React.FC = () => {
@@ -1083,41 +928,14 @@ const Blog: React.FC = () => {
     document.body.style.overflow = 'auto';
   }, []);
   
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  
-  const shapeAnimations = {
-    x: reducedMotion ? 0 : [0, 20, 0],
-    y: reducedMotion ? 0 : [0, 15, 0]
-  };
-  
-  const [visibleCount, setVisibleCount] = useState(6);
-  
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && visibleCount < filteredPosts.length) {
-        setVisibleCount(prev => Math.min(prev + 6, filteredPosts.length));
-      }
-    }, { threshold: 0.1 });
-    
-    const sentinel = document.getElementById('load-more-sentinel');
-    if (sentinel) observer.observe(sentinel);
-    
-    return () => {
-      if (sentinel) observer.unobserve(sentinel);
-    };
-  }, [filteredPosts.length, visibleCount]);
-  
-  const reducedTransition = useMemo(() => ({
-    duration: reducedMotion ? 0 : 0.4,
-    ease: "easeOut"
-  }), [reducedMotion]);
-  
-
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      closePostDetail();
+    }
+  }, [closePostDetail]);
   
   return (
     <PageContainer>
-      <CursorStyle />
-      
       <BackgroundShapes>
         <Shape 
           size="500px" 
@@ -1290,7 +1108,6 @@ const Blog: React.FC = () => {
               onClick={() => updateCategory(category)}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
-              className="category-button"
             >
               {category}
             </CategoryButton>
@@ -1299,15 +1116,13 @@ const Blog: React.FC = () => {
         
         {featuredPost && selectedCategory === 'All' && (
           <FeaturedBlog
-            variants={cardVariants}
-            initial="hidden"
-            animate="visible"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             onClick={() => openPostDetail(featuredPost)}
-            className="blog-card"
           >
             <FeaturedImageWrapper>
-              <LazyImage
+              <BlogImage
                 src={featuredPost.image}
                 alt={featuredPost.title}
               />
@@ -1330,48 +1145,53 @@ const Blog: React.FC = () => {
         <BlogGrid>
           {filteredPosts.length > 0 ? filteredPosts
             .filter(post => !post.featured || selectedCategory !== 'All')
-            .slice(0, visibleCount)
             .map((post, index) => (
-              <MemoizedBlogCard 
+              <BlogCard
                 key={post.id}
-                post={post}
-                index={index}
-                openPostDetail={openPostDetail}
-              />
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                onClick={() => openPostDetail(post)}
+              >
+                <ImageWrapper>
+                  <BlogImage
+                    src={post.image}
+                    alt={post.title}
+                  />
+                  <ImageOverlay />
+                </ImageWrapper>
+                <BlogContent>
+                  <BlogCategory>{post.category}</BlogCategory>
+                  <BlogPostTitle>{post.title}</BlogPostTitle>
+                  <BlogExcerpt>{post.excerpt}</BlogExcerpt>
+                  <MetaInfo>
+                    <DateInfo>
+                      <span role="img" aria-label="calendar">📅</span> {post.date}
+                    </DateInfo>
+                  </MetaInfo>
+                </BlogContent>
+              </BlogCard>
             )) : (
             <NoResults>No posts found in this category</NoResults>
-          )}
-          {visibleCount < filteredPosts.filter(post => !post.featured || selectedCategory !== 'All').length && (
-            <div id="load-more-sentinel" style={{ height: "20px", width: "100%" }} />
           )}
         </BlogGrid>
       </ContentContainer>
       
       <AnimatePresence>
         {selectedPost && (
-          <ModalOverlay
+          <ModalBackdrop
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={closePostDetail}
-            className="modal-overlay"
-            style={{ cursor: 'default !important' }}
+            onClick={handleBackdropClick}
           >
-            <ModalContent
+            <ModalCard
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 250 }}
-              onClick={(e) => e.stopPropagation()}
-              style={{ cursor: 'default !important' }}
             >
-              <CloseButton
-                onClick={closePostDetail}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="modal-close"
-                style={{ cursor: 'pointer !important' }}
-              >
+              <CloseButton onClick={closePostDetail}>
                 ✕
               </CloseButton>
               
@@ -1385,15 +1205,17 @@ const Blog: React.FC = () => {
                 </PostMeta>
               </PostHeader>
               
-              <PostImage src={selectedPost.image} />
+              <PostImageContainer>
+                <PostImage src={selectedPost.image} alt={selectedPost.title} />
+              </PostImageContainer>
               
               <PostContent dangerouslySetInnerHTML={{ __html: selectedPost.content }} />
-            </ModalContent>
-          </ModalOverlay>
+            </ModalCard>
+          </ModalBackdrop>
         )}
       </AnimatePresence>
     </PageContainer>
   );
 };
 
-export default React.memo(Blog); 
+export default Blog; 

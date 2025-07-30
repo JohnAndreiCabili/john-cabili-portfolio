@@ -164,12 +164,14 @@ const ProjectsGrid = styled(motion.div)`
   
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    gap: 16px;
+    margin-top: 24px;
   }
   
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
+    margin-top: 20px;
   }
 `;
 
@@ -203,6 +205,14 @@ const ProjectImage = styled.div`
     height: 100%;
     object-fit: cover;
     transition: transform 0.8s ease-out;
+  }
+  
+  @media (max-width: 768px) {
+    height: 160px;
+  }
+  
+  @media (max-width: 480px) {
+    height: 140px;
   }
 `;
 

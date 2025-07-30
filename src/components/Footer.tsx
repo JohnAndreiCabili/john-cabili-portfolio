@@ -12,6 +12,16 @@ const FooterContainer = styled.footer`
   background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.02));
   margin-top: 60px;
   border-top: 1px solid rgba(0, 113, 227, 0.1);
+  
+  @media (max-width: 768px) {
+    padding: 30px 16px;
+    margin-top: 40px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 24px 12px;
+    margin-top: 30px;
+  }
 `;
 
 const FooterContent = styled.div`
@@ -35,6 +45,16 @@ const SocialMediaContainer = styled(motion.div)`
   
   @media (max-width: 900px) {
     justify-content: center;
+  }
+  
+  @media (max-width: 768px) {
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 12px;
+    margin-bottom: 16px;
   }
 `;
 

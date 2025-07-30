@@ -17,6 +17,14 @@ const HeroSection = styled.section`
   justify-content: center;
   padding: 20px 24px 60px;
   overflow: hidden;
+  
+  @media (max-width: 768px) {
+    padding: 16px 16px 40px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 12px 12px 30px;
+  }
 `;
 
 const ContentContainer = styled.div`
@@ -33,6 +41,15 @@ const ContentContainer = styled.div`
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: 32px;
+  }
+  
+  @media (max-width: 768px) {
+    gap: 24px;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 20px;
   }
 `;
 
@@ -203,11 +220,16 @@ const ButtonsContainer = styled(motion.div)`
     justify-content: center;
   }
   
+  @media (max-width: 768px) {
+    gap: 12px;
+  }
+  
   @media (max-width: 500px) {
     flex-direction: column;
     width: 100%;
-    max-width: 300px;
+    max-width: 280px;
     margin: 0 auto;
+    gap: 10px;
   }
 `;
 
@@ -219,6 +241,16 @@ const SocialMediaContainer = styled(motion.div)`
   
   @media (max-width: 900px) {
     justify-content: center;
+  }
+  
+  @media (max-width: 768px) {
+    gap: 16px;
+    margin-top: 32px;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 12px;
+    margin-top: 24px;
   }
 `;
 

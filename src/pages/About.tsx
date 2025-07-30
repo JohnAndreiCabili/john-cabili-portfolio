@@ -36,7 +36,11 @@ const Section = styled(motion.section)`
   z-index: 2;
   
   @media (max-width: 768px) {
-    padding: 60px 24px;
+    padding: 40px 16px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 30px 12px;
   }
 `;
 
@@ -50,6 +54,14 @@ const HeroSection = styled(Section)`
     grid-template-columns: 1fr;
     gap: 40px;
     text-align: center;
+  }
+  
+  @media (max-width: 768px) {
+    gap: 30px;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 24px;
   }
 `;
 

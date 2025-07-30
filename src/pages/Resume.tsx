@@ -55,7 +55,11 @@ const ResumeContainer = styled.div`
   z-index: 2;
   
   @media (max-width: 768px) {
-    padding: 60px 24px;
+    padding: 40px 16px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 30px 12px;
   }
 `;
 
@@ -68,7 +72,13 @@ const ResumeLayout = styled.div`
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 20px;
+    margin-top: 24px;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 16px;
+    margin-top: 20px;
   }
 `;
 
@@ -206,40 +216,25 @@ const NavIcon = styled.span`
 `;
 
 const StyledSection = styled(motion.section)`
-  min-height: 70vh;
-  margin-bottom: 100px;
+  min-height: auto;
+  margin-bottom: 60px;
   position: relative;
   
   &:first-of-type {
-    padding-top: 40px;
-    min-height: auto;
-    @media (max-width: 768px) {
-      margin-top: 20px;
-    }
+    padding-top: 20px;
+    margin-top: 0;
   }
   
   &:last-child {
     margin-bottom: 0;
   }
   
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -50px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(to right, 
-      rgba(0, 113, 227, 0.2) 0%,
-      rgba(0, 113, 227, 0.05) 50%,
-      rgba(0, 113, 227, 0) 100%
-    );
-    pointer-events: none;
-    display: none;
+  @media (max-width: 768px) {
+    margin-bottom: 40px;
   }
   
-  &:last-child::after {
-    display: none;
+  @media (max-width: 480px) {
+    margin-bottom: 30px;
   }
 `;
 
@@ -247,7 +242,7 @@ const SkillsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr;
@@ -625,10 +620,14 @@ const BadgeContainer = styled.div`
   
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 16px;
   }
   
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 12px;
   }
 `;
 
@@ -691,7 +690,7 @@ const techSkills = [
 const SectionTitle = styled.h2`
   font-size: 38px;
   font-weight: 800;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   position: relative;
   display: inline-block;
   background: linear-gradient(to right, #000, #444);
@@ -1056,7 +1055,7 @@ const Resume: React.FC = () => {
           <ProgressHeader 
             title="JOHN ANDREI C. CABILI"
             sectionId="resume"
-            subtitle="City of Manila, Metro Manila | cabilijohnandrei@gmail.com | 0929-802-6388 | GitHub | Website"
+            subtitle="City of Manila, Metro Manila | GitHub | Website"
           />
         </motion.div>
         
@@ -1119,7 +1118,6 @@ const Resume: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                style={{ marginTop: '-40px' }}
               >
                 <SectionTitle>Education</SectionTitle>
                 <EducationCard
@@ -1161,88 +1159,57 @@ const Resume: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                style={{ marginTop: '-20px' }}
               >
                 <SectionTitle>Technical Skills</SectionTitle>
-                <h3 style={{ fontSize: '20px', marginBottom: '20px', fontWeight: 600 }}>Languages &amp; Markup</h3>
+                
                 <SkillsGrid>
-                  {['Kotlin', 'Dart', 'Python', 'Java', 'TypeScript', 'HTML/CSS', 'PHP'].map((skill, index) => (
-                    <SkillCard
-                      key={skill}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <SkillIcon>{
-                        skill === 'Kotlin' ? '📱' :
-                        skill === 'Dart' ? '📊' :
-                        skill === 'Python' ? '🐍' :
-                        skill === 'Java' ? '☕' :
-                        skill === 'TypeScript' ? '🌐' :
-                        skill === 'HTML/CSS' ? '🎨' :
-                        skill === 'PHP' ? '🌀' :
-                        '💻'
-                      }</SkillIcon>
-                      <SkillName>{skill}</SkillName>
-                    </SkillCard>
-                  ))}
-                </SkillsGrid>
-                <h3 style={{ fontSize: '20px', marginBottom: '20px', fontWeight: 600 }}>Frameworks &amp; Libraries</h3>
-                <SkillsGrid>
-                  {['Jetpack Compose', 'Flutter', 'React', 'Next.js', 'TailwindCSS'].map((skill, index) => (
-                    <SkillCard
-                      key={skill}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 + 0.6 }}
-                    >
-                      <SkillIcon>{
-                        skill === 'Jetpack Compose' ? '📱' :
-                        skill === 'Flutter' ? '💙' :
-                        skill === 'React' ? '⚛️' :
-                        skill === 'Next.js' ? '⏭️' :
-                        skill === 'TailwindCSS' ? '🌬️' :
-                        '📦'
-                      }</SkillIcon>
-                      <SkillName>{skill}</SkillName>
-                    </SkillCard>
-                  ))}
-                </SkillsGrid>
-                <h3 style={{ fontSize: '20px', marginBottom: '20px', fontWeight: 600 }}>Tools &amp; Platforms</h3>
-                <SkillsGrid>
-                  {['Android Studio', 'Visual Studio', 'Git', 'GitHub', 'Power BI', 'MySQL'].map((skill, index) => (
-                    <SkillCard
-                      key={skill}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 + 1.2 }}
-                    >
-                      <SkillIcon>{
-                        skill === 'Android Studio' ? '🤖' :
-                        skill === 'Visual Studio' ? '🔧' :
-                        skill === 'Git' ? '🔄' :
-                        skill === 'GitHub' ? '🐙' :
-                        skill === 'Power BI' ? '📊' :
-                        skill === 'MySQL' ? '🗃️' :
-                        '🛠️'
-                      }</SkillIcon>
-                      <SkillName>{skill}</SkillName>
-                    </SkillCard>
-                  ))}
-                </SkillsGrid>
-                <h3 style={{ fontSize: '20px', marginBottom: '20px', fontWeight: 600 }}>Technologies &amp; APIs</h3>
-                <SkillsGrid>
-                  {['REST APIs', 'UI/UX Design', 'ML Model Integration', 'Technical Documentation'].map((skill, index) => (
-                    <SkillCard
-                      key={skill}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 + 1.8 }}
-                    >
-                      <SkillIcon>🛠️</SkillIcon>
-                      <SkillName>{skill}</SkillName>
-                    </SkillCard>
-                  ))}
+                  <SkillCard
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <SkillIcon>💻</SkillIcon>
+                    <SkillName>Languages & Markup</SkillName>
+                    <div style={{ fontSize: '14px', color: '#666', lineHeight: '1.5', marginTop: '8px' }}>
+                      Kotlin, Dart, Python, Java, TypeScript, HTML/CSS, PHP
+                    </div>
+                  </SkillCard>
+                  
+                  <SkillCard
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <SkillIcon>📦</SkillIcon>
+                    <SkillName>Frameworks & Libraries</SkillName>
+                    <div style={{ fontSize: '14px', color: '#666', lineHeight: '1.5', marginTop: '8px' }}>
+                      Jetpack Compose, Flutter, React, Next.js, TailwindCSS
+                    </div>
+                  </SkillCard>
+                  
+                  <SkillCard
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <SkillIcon>🛠️</SkillIcon>
+                    <SkillName>Tools & Platforms</SkillName>
+                    <div style={{ fontSize: '14px', color: '#666', lineHeight: '1.5', marginTop: '8px' }}>
+                      Android Studio, Visual Studio, Git, GitHub, Power BI, MySQL
+                    </div>
+                  </SkillCard>
+                  
+                  <SkillCard
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <SkillIcon>🔌</SkillIcon>
+                    <SkillName>Technologies & APIs</SkillName>
+                    <div style={{ fontSize: '14px', color: '#666', lineHeight: '1.5', marginTop: '8px' }}>
+                      REST APIs, UI/UX Design, ML Model Integration, Technical Documentation
+                    </div>
+                  </SkillCard>
                 </SkillsGrid>
               </StyledSection>
               
@@ -1255,7 +1222,6 @@ const Resume: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                style={{ marginBottom: 100, minHeight: 100 }}
               >
                 <SectionTitle>Professional Experience</SectionTitle>
                 <ExperienceContainer>
@@ -1280,7 +1246,6 @@ const Resume: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                style={{ marginBottom: 100, minHeight: 100 }}
               >
                 <SectionTitle>Project Experience</SectionTitle>
                 <ExperienceContainer>
@@ -1372,7 +1337,6 @@ const Resume: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                style={{ marginTop: '0px' }}
               >
                 <SectionTitle>Awards & Recognition</SectionTitle>
                 
