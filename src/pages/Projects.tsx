@@ -50,51 +50,24 @@ const DecorativeElement = styled(motion.div)<{ top: string; left: string; color:
 const PageContainer = styled.div`
   min-height: 100vh;
   position: relative;
-  padding: 80px 24px;
+  padding: 120px 24px 80px;
   max-width: 1200px;
   margin: 0 auto;
   z-index: 2;
   overflow: hidden;
   
   @media (max-width: 768px) {
-    padding: 60px 24px;
+    padding: 30px 16px 40px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 20px 12px 30px;
   }
 `;
 
 const ProjectsHeader = styled.div`
   margin-bottom: 60px;
   text-align: center;
-`;
-
-const PageTitle = styled.h1`
-  font-size: 3.5rem;
-  margin-bottom: 20px;
-  background: linear-gradient(to right, #000, #444);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  position: relative;
-  display: inline-block;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 4px;
-    width: 80px;
-    background: linear-gradient(to right, #0071e3, #64acff);
-    border-radius: 4px;
-  }
-  
-  @media (max-width: 768px) {
-    font-size: 2rem;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 1.8rem;
-  }
 `;
 
 const CategoryFilters = styled.div`

@@ -69,25 +69,25 @@ const GlobalStyle = createGlobalStyle`
   }
 
   h1 {
-    font-size: 48px;
+    font-size: 42px;
     line-height: 1.1;
     letter-spacing: -0.015em;
   }
 
   h2 {
-    font-size: 40px;
+    font-size: 32px;
     line-height: 1.1;
     letter-spacing: -0.015em;
   }
 
   h3 {
-    font-size: 28px;
+    font-size: 24px;
     line-height: 1.2;
     letter-spacing: -0.01em;
   }
 
   p {
-    font-size: 17px;
+    font-size: 16px;
     line-height: 1.5;
     letter-spacing: -0.01em;
   }
@@ -119,15 +119,15 @@ const GlobalStyle = createGlobalStyle`
   /* Responsive typography */
   @media (max-width: 768px) {
     h1 {
-      font-size: 28px;
+      font-size: 32px;
     }
     
     h2 {
-      font-size: 24px;
+      font-size: 28px;
     }
 
     h3 {
-      font-size: 20px;
+      font-size: 22px;
     }
     
     p {
@@ -137,15 +137,15 @@ const GlobalStyle = createGlobalStyle`
   
   @media (max-width: 480px) {
     h1 {
-      font-size: 24px;
+      font-size: 28px;
     }
     
     h2 {
-      font-size: 20px;
+      font-size: 24px;
     }
 
     h3 {
-      font-size: 18px;
+      font-size: 20px;
     }
     
     p {

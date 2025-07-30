@@ -458,7 +458,7 @@ const PostHeader = styled.div`
 `;
 
 const PostTitle = styled.h2`
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 800;
   margin-bottom: 20px;
   background: linear-gradient(120deg, #0071e3, #1e88e5);
@@ -503,7 +503,7 @@ const PostImage = styled.img`
 
 const PostContent = styled.div`
   padding: 0 40px 40px;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.8;
   color: #334155;
   
@@ -512,7 +512,7 @@ const PostContent = styled.div`
   }
   
   h3 {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     margin: 36px 0 20px;
     color: var(--text-dark);
@@ -535,7 +535,7 @@ const PostContent = styled.div`
   
   @media (max-width: 768px) {
     padding: 0 20px 30px;
-    font-size: 16px;
+    font-size: 15px;
   }
 `;
 

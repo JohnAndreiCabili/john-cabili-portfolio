@@ -126,7 +126,7 @@ const Greeting = styled(motion.div)`
 `;
 
 const Title = styled(motion.h1)`
-  font-size: 68px;
+  font-size: 48px;
   font-weight: 800;
   margin-bottom: 16px;
   line-height: 1.1;
@@ -142,7 +142,7 @@ const Title = styled(motion.h1)`
   }
   
   @media (max-width: 480px) {
-    font-size: 28px;
+    font-size: 32px;
   }
 `;
 
@@ -191,7 +191,7 @@ const RoleHighlight = styled.span`
 `;
 
 const Description = styled(motion.p)`
-  font-size: 19px;
+  font-size: 17px;
   line-height: 1.7;
   color: #555;
   margin-bottom: 38px;

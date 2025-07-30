@@ -32,7 +32,7 @@ const HeaderContainer = styled.div`
 `;
 
 const Title = styled(motion.h2)`
-  font-size: 52px;
+  font-size: 42px;
   font-weight: 800;
   margin-bottom: 20px;
   position: relative;
@@ -44,7 +44,7 @@ const Title = styled(motion.h2)`
   letter-spacing: -0.02em;
   
   @media (max-width: 768px) {
-    font-size: 38px;
+    font-size: 32px;
   }
 `;
 

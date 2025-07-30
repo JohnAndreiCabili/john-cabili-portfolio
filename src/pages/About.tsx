@@ -206,7 +206,7 @@ const TileLabel = styled.span`
 `;
 
 const Title = styled(motion.h1)`
-  font-size: 58px;
+  font-size: 48px;
   font-weight: 800;
   margin-bottom: 16px;
   line-height: 1.1;
@@ -218,12 +218,12 @@ const Title = styled(motion.h1)`
   letter-spacing: -0.02em;
   
   @media (max-width: 768px) {
-    font-size: 42px;
+    font-size: 36px;
   }
 `;
 
 const Subtitle = styled(motion.div)`
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--primary-color);
   margin-bottom: 16px;
@@ -254,7 +254,7 @@ const Location = styled(motion.div)`
 `;
 
 const StoryText = styled(motion.p)`
-  font-size: 19px;
+  font-size: 17px;
   line-height: 1.7;
   color: #555;
   margin-bottom: 0;
@@ -278,7 +278,7 @@ const ContentSection = styled(Section)`
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   margin-bottom: 32px;
   color: var(--text-dark);
@@ -336,7 +336,7 @@ const QuoteSection = styled(motion.div)`
 `;
 
 const QuoteText = styled.p`
-  font-size: 26px;
+  font-size: 22px;
   line-height: 1.5;
   color: var(--text-dark);
   font-weight: 500;
@@ -346,7 +346,7 @@ const QuoteText = styled.p`
   z-index: 1;
   
   @media (max-width: 768px) {
-    font-size: 20px;
+    font-size: 18px;
   }
 `;
 

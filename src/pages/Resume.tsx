@@ -708,7 +708,7 @@ const techSkills = [
 
 // Enhanced section titles
 const SectionTitle = styled.h2`
-  font-size: 38px;
+  font-size: 32px;
   font-weight: 800;
   margin-bottom: 40px;
   position: relative;
