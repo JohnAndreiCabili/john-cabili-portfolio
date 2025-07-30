@@ -599,8 +599,8 @@ const ProjectStyles = () => {
   return null;
 };
 
-// Mobile navigation
-const MobileNavigation = styled.div<{ isFixed: boolean; scrollProgress: number }>`
+// Mobile navigation (original position)
+const MobileNavigation = styled.div`
   display: none;
   
   @media (max-width: 768px) {
@@ -608,20 +608,40 @@ const MobileNavigation = styled.div<{ isFixed: boolean; scrollProgress: number }
     overflow-x: auto;
     padding: 16px 24px;
     gap: 8px;
-    position: ${(props) => props.isFixed ? 'fixed' : 'relative'};
-    top: ${(props) => props.isFixed ? '0' : 'auto'};
-    left: ${(props) => props.isFixed ? '0' : 'auto'};
-    right: ${(props) => props.isFixed ? '0' : 'auto'};
-    z-index: ${(props) => props.isFixed ? '1000' : 'auto'};
-    background: ${(props) => props.isFixed ? 'rgba(255, 255, 255, 0.95)' : 'transparent'};
-    backdrop-filter: ${(props) => props.isFixed ? 'blur(12px)' : 'none'};
-    -webkit-backdrop-filter: ${(props) => props.isFixed ? 'blur(12px)' : 'none'};
-    border-bottom: ${(props) => props.isFixed ? '1px solid rgba(0, 113, 227, 0.1)' : 'none'};
-    box-shadow: ${(props) => props.isFixed ? '0 4px 20px rgba(0, 0, 0, 0.08)' : 'none'};
-    margin-bottom: ${(props) => props.isFixed ? '0' : '24px'};
-    transform: ${(props) => props.isFixed ? 'translateY(0)' : `translateY(${props.scrollProgress * -15}px)`};
-    opacity: ${(props) => props.isFixed ? '1' : Math.max(0.95, 1 - props.scrollProgress * 0.05)};
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 24px;
+    margin-left: -16px;
+    margin-right: -16px;
+    
+    /* Hide scrollbar but allow scrolling */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+`;
+
+// Fixed mobile navigation (slides down from top)
+const FixedMobileNavigation = styled.div<{ isFixed: boolean }>`
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: flex;
+    overflow-x: auto;
+    padding: 16px 24px;
+    gap: 8px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 113, 227, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(${(props) => props.isFixed ? '0' : '-100%'});
+    transition: transform 0.3s ease-out;
     
     /* Hide scrollbar but allow scrolling */
     scrollbar-width: none;
@@ -664,6 +684,9 @@ const Projects: React.FC = () => {
   const [isMobileNavFixed, setIsMobileNavFixed] = useState(false);
   const [mobileNavScrollProgress, setMobileNavScrollProgress] = useState(0);
   const projectsTitleRef = useRef<HTMLDivElement>(null);
+  // Add refs for mobile navigation auto-scroll
+  const mobileNavRef = useRef<HTMLDivElement>(null);
+  const fixedMobileNavRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     isMounted.current = true;
@@ -719,6 +742,44 @@ const Projects: React.FC = () => {
     
     return () => clearTimeout(filterTimer);
   }, [activeCategory]);
+
+  // Auto-scroll mobile navigation to show active button
+  const scrollToActiveButton = useCallback((activeCategoryId: string) => {
+    if (!isMobile) return;
+    
+    const scrollToButton = (navRef: React.RefObject<HTMLDivElement | null>) => {
+      if (!navRef.current) return;
+      
+      const buttons = navRef.current.querySelectorAll('button');
+      const activeIndex = categories.findIndex(cat => cat.id === activeCategoryId);
+      
+      if (buttons[activeIndex]) {
+        const button = buttons[activeIndex] as HTMLElement;
+        const container = navRef.current;
+        const buttonLeft = button.offsetLeft;
+        const buttonWidth = button.offsetWidth;
+        const containerWidth = container.offsetWidth;
+        
+        // Calculate the target scroll position to center the button
+        const targetScrollLeft = buttonLeft - (containerWidth / 2) + (buttonWidth / 2);
+        
+        // Smooth scroll to the button
+        container.scrollTo({
+          left: targetScrollLeft,
+          behavior: 'smooth'
+        });
+      }
+    };
+    
+    // Scroll both mobile navigations
+    scrollToButton(mobileNavRef);
+    scrollToButton(fixedMobileNavRef);
+  }, [isMobile, categories]);
+
+  // Auto-scroll mobile navigation when active category changes
+  useEffect(() => {
+    scrollToActiveButton(activeCategory);
+  }, [activeCategory, scrollToActiveButton]);
   
   const handleProjectClick = (project: Project) => {
     setSelectedProject(project);
@@ -834,9 +895,9 @@ const Projects: React.FC = () => {
           />
         </motion.div>
         
-        {/* Mobile navigation */}
+        {/* Mobile navigation (original position) */}
         {isMobile && (
-          <MobileNavigation isFixed={isMobileNavFixed} scrollProgress={mobileNavScrollProgress}>
+          <MobileNavigation ref={mobileNavRef}>
             {categories.map((category, index) => (
               <MobileNavButton
                 key={category.id}
@@ -853,6 +914,25 @@ const Projects: React.FC = () => {
               </MobileNavButton>
             ))}
           </MobileNavigation>
+        )}
+        
+        {/* Fixed mobile navigation (slides down from top) */}
+        {isMobile && (
+          <FixedMobileNavigation ref={fixedMobileNavRef} isFixed={isMobileNavFixed}>
+            {categories.map((category, index) => (
+              <MobileNavButton
+                key={category.id}
+                active={activeCategory === category.id}
+                onClick={() => setActiveCategory(category.id)}
+                whileHover={{ y: -3 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                {category.id === 'all' ? '📋' : 
+                 category.id === 'web' ? '🌐' : 
+                 category.id === 'ml' ? '🤖' : '📦'} {category.label}
+              </MobileNavButton>
+            ))}
+          </FixedMobileNavigation>
         )}
         
         {/* Category filters */}

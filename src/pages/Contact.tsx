@@ -362,7 +362,9 @@ const WelcomeTooltip = styled(motion.div)`
   position: absolute;
   bottom: 75px;
   right: 0;
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   padding: 14px 18px;
   border-radius: 18px;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
@@ -371,6 +373,20 @@ const WelcomeTooltip = styled(motion.div)`
   color: var(--text-dark);
   line-height: 1.5;
   
+  @media (max-width: 768px) {
+    bottom: 60px;
+    max-width: 200px;
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+  
+  @media (max-width: 480px) {
+    bottom: 55px;
+    max-width: 180px;
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+  
   &::after {
     content: '';
     position: absolute;
@@ -378,9 +394,21 @@ const WelcomeTooltip = styled(motion.div)`
     right: 24px;
     width: 16px;
     height: 16px;
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     transform: rotate(45deg);
     border-radius: 2px;
+    
+    @media (max-width: 768px) {
+      right: 20px;
+      width: 14px;
+      height: 14px;
+    }
+    
+    @media (max-width: 480px) {
+      right: 18px;
+      width: 12px;
+      height: 12px;
+    }
   }
 `;
 
