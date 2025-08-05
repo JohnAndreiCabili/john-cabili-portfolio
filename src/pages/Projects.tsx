@@ -333,7 +333,7 @@ const projects: Project[] = [
     categories: ["web", "api"],
     technologies: ["JavaScript", "OpenWeather API", "Geolocation"],
     about: "A weather forecasting application that provides users with accurate weather information for cities in the Philippines. The app features a 7-day forecast, real-time weather updates, and location-based services to automatically detect the user's current location.",
-    website: "",
+    website: "https://weatherooo.vercel.app/",
     github: "https://github.com/JohnAndreiCabili/weatherooo.git"
   },
   {
@@ -1063,6 +1063,17 @@ const Projects: React.FC = () => {
                 </DetailSection>
                 
                 <LinkButtonGroup>
+                  {selectedProject?.website && (
+                    <LinkButton href={selectedProject?.website} target="_blank" rel="noopener noreferrer" primary>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 13V19A2 2 0 0 1 16 21H8A2 2 0 0 1 6 19V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M10 17H14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M12 3V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M7 8L12 3L17 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      Visit Website
+                    </LinkButton>
+                  )}
                   {selectedProject?.github && (
                     <LinkButton href={selectedProject?.github} target="_blank" rel="noopener noreferrer">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
