@@ -18,7 +18,7 @@ A personal portfolio website showcasing my projects, skills, and biography as a 
 
 | Frontend | Tools & Deployment | Coding Standards |
 |----------|---------------------|-------------------|
-| React / Next.js (or whatever your frontend is) | Vercel for deployment | ESLint, Prettier (or whatever you use) |
+| React / Next.js (or whatever your frontend is) | Vercel for deployment | ESLint |
 | TypeScript | Git & GitHub for version control | Strong typing, modular code structure |
 
 ---
