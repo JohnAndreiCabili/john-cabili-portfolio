@@ -1,6 +1,6 @@
 # John Andrei Cabili — Portfolio Website
 
-[![Portfolio Live](https://img.shields.io/badge/Live-View-blue)](https://john-cabili-portfolio.vercel.app)  
+[![Portfolio Live](https://img.shields.io/badge/Live-View-blue)](https://johnandreicabili.vercel.app)  
 A personal portfolio website showcasing my projects, skills, and biography as a developer.
 
 ---
