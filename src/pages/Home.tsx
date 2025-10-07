@@ -459,10 +459,14 @@ const FloatingItem = styled(motion.div)<{ top: string; left: string; size: strin
   justify-content: center;
   font-size: calc(${props => props.size} * 0.5);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  z-index: 2;
+  z-index: 10;
   transform-style: preserve-3d;
   overflow: hidden;
   cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   
   @media (max-width: 768px) {
     width: calc(${props => props.size} * 0.7);
@@ -639,10 +643,22 @@ const skillsData: Skill[] = [
     }
   },
   {
+    id: 'ai',
+    icon: '🤖',
+    title: 'AI & ML',
+    description: 'Developing intelligent solutions with machine learning and artificial intelligence.',
+    background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
+    floatingPosition: {
+      top: '60%',
+      left: '5%',
+      size: '68px'
+    }
+  },
+  {
     id: 'code',
     icon: '💻',
-    title: 'Frontend Development',
-    description: 'Creating responsive, performant web applications with modern JavaScript.',
+    title: 'Full-stack Development',
+    description: 'Building complete web applications from frontend to backend with modern technologies.',
     background: 'linear-gradient(135deg, #34c759, #5ac8fa)',
     floatingPosition: {
       top: '85%',
@@ -871,13 +887,19 @@ const Home: React.FC = memo(() => {
   };
    
   // Handle skill selection
-  const handleSkillClick = (skill: Skill) => {
+  const handleSkillClick = (skill: Skill, event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
     setSelectedSkill(skill);
     setShowProfile(false);
   };
    
   // Handle back to profile
-  const handleBackClick = () => {
+  const handleBackClick = (event?: React.MouseEvent) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     setShowProfile(true);
     setSelectedSkill(null);
   };
@@ -1120,7 +1142,18 @@ const Home: React.FC = memo(() => {
                     opacity: selectedSkill?.id === skill.id ? 0 : 1
                   }}
                   whileHover={{ scale: 1.1, rotate: skillsData.indexOf(skill) % 2 === 0 ? 10 : -10 }}
-                  onClick={() => handleSkillClick(skill)}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={(e) => handleSkillClick(skill, e)}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    // Create a synthetic mouse event for touch
+                    const syntheticEvent = {
+                      ...e,
+                      preventDefault: () => e.preventDefault(),
+                      stopPropagation: () => e.stopPropagation()
+                    } as React.MouseEvent;
+                    handleSkillClick(skill, syntheticEvent);
+                  }}
                 >
                   <FloatingItemContent>{skill.icon}</FloatingItemContent>
                 </FloatingItem>
