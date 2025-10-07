@@ -949,17 +949,17 @@ const About: React.FC = () => {
           <Subtitle
             variants={itemVariants}
           >
-            Software Developer
+            Full-stack Developer
           </Subtitle>
           <Location
             variants={itemVariants}
           >
-            <span role="img" aria-label="location">📍</span> Manila, Philippines
+            <span role="img" aria-label="location">📍</span> Quezon City, Metro Manila
           </Location>
           <StoryText
             variants={itemVariants}
           >
-            I work with software development, focusing on component architecture, state management, and responsive design. I build things that are both functional and user-friendly.
+            I'm a Computer Science graduate with hands-on experience in full-stack development across web, mobile, and desktop platforms. I specialize in building applications from user interface to backend and databases, integrating machine learning models, and applying secure software practices.
           </StoryText>
         </motion.div>
         
@@ -1105,7 +1105,7 @@ const About: React.FC = () => {
                 whileHover={{ scale: 1.1, boxShadow: "0 10px 25px rgba(255, 149, 0, 0.3)" }}
                 style={{ whiteSpace: "nowrap" }}
               >
-                <SkillIcon>🧠</SkillIcon> ML
+                <SkillIcon>🤖</SkillIcon> AI & ML
               </SkillTag>
               
               <SkillTag 
@@ -1123,7 +1123,7 @@ const About: React.FC = () => {
                 }}
                 whileHover={{ scale: 1.1, boxShadow: "0 10px 25px rgba(52, 199, 89, 0.3)" }}
               >
-                <SkillIcon>📱</SkillIcon> Responsive
+                <SkillIcon>💻</SkillIcon> Full-stack
               </SkillTag>
               
               <SkillTag 
@@ -1273,11 +1273,11 @@ I build functional applications with a focus on creativity and practicality. I f
             transition={{ duration: 0.6 }}
           >
             <StoryCardContent>
-              My computer science education includes algorithms, data structures, and system design. These concepts help me approach programming problems methodically.
+              I graduated from Adamson University with a B.S. in Computer Science, specializing in Web Science, achieving Summa Cum Laude honors as the Top 2 Performing Computer Science Student. My academic journey included seven consecutive semesters on the Dean's List and Academic Scholar recognition.
               <br /><br />
-              I've built React components, worked with hooks for state management, and implemented responsive designs. I'm familiar with React lifecycle and optimization techniques.
+              My education covered web development, software engineering, machine learning, cybersecurity, and cloud & API integration. I've built full-stack applications using technologies like React, Kotlin, Python, and integrated machine learning models for real-world solutions.
               <br /><br />
-              I explore different libraries and frameworks to understand software development patterns and best practices.
+              I actively explore emerging technologies and maintain certifications in cybersecurity and software engineering to stay current with industry standards.
             </StoryCardContent>
           </StoryCard>
           
@@ -1289,17 +1289,15 @@ I build functional applications with a focus on creativity and practicality. I f
           >
             <StoryCardTitle>Professional Experience</StoryCardTitle>
             <StoryCardContent>
-              I worked as an intern at OTis Philippines Inc., contributing to research tasks for software development projects. My responsibilities included:
+              I worked as a Software Development and Artificial Intelligence Intern at OTis Philippines Inc., where I contributed to cutting-edge projects that combined traditional software development with AI technologies. My key responsibilities included:
               <br /><br />
-              • Researching payment systems integration and user management solutions
+              • Integrated payment APIs and implemented role-based access control (RBAC) for secure systems
               <br />
-              • Conducting technical evaluations of language detection technologies
+              • Automated language detection testing with backend scripts, significantly boosting accuracy and efficiency
               <br />
-              • Developing test scripts for software components
-              <br />
-              • Contributing to documentation for architecture decision records
+              • Prepared comprehensive technical documentation and architecture records to support scalable design decisions
               <br /><br />
-              This experience allowed me to apply my technical skills in a professional environment and learn about software development workflows.
+              This experience allowed me to apply my full-stack development skills in a professional environment while gaining hands-on experience with AI integration and secure software practices.
             </StoryCardContent>
           </StoryCard>
           
@@ -1449,14 +1447,6 @@ I build functional applications with a focus on creativity and practicality. I f
                     data-share-badge-host="https://www.credly.com">
                   </div>
                 </Badge>
-                <Badge>
-                  <div 
-                    data-iframe-width="150" 
-                    data-iframe-height="270" 
-                    data-share-badge-id="db4fa698-ea9d-4544-adfe-6c10e21a4937" 
-                    data-share-badge-host="https://www.credly.com">
-                  </div>
-                </Badge>
               </BadgeContainer>
             </StoryCardContent>
           </StoryCard>
@@ -1544,8 +1534,8 @@ I build functional applications with a focus on creativity and practicality. I f
         >
           <CTATitle>Let's build something together</CTATitle>
           <CTADescription>
-            I build applications using modern JavaScript frameworks and state management solutions. If you have a project that needs 
-            implementation help, let's talk about working together.
+            I build full-stack applications using modern technologies, integrate AI/ML solutions, and apply secure software practices. If you have a project that needs 
+            comprehensive development expertise, let's talk about working together.
           </CTADescription>
           <CTAButton 
             onClick={handleContactClick}

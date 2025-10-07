@@ -1151,7 +1151,7 @@ const Home: React.FC = memo(() => {
                       ...e,
                       preventDefault: () => e.preventDefault(),
                       stopPropagation: () => e.stopPropagation()
-                    } as React.MouseEvent;
+                    } as unknown as React.MouseEvent;
                     handleSkillClick(skill, syntheticEvent);
                   }}
                 >
