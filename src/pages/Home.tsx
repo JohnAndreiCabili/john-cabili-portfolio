@@ -899,7 +899,7 @@ const Home: React.FC = memo(() => {
   };
    
   // Using useMemo for the roles array to avoid dependency issues
-  const roles = useMemo(() => ["Frontend Engineer", "React Developer", "Creative Developer", "Frontend Developer", "Interface Implementer", "Data Scientist"], []);
+  const roles = useMemo(() => ["Full-stack Developer", "React Developer", "AI Researcher", "Machine Learning Developer"], []);
   const [roleIndex, setRoleIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);

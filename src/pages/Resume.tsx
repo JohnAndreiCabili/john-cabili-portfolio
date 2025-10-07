@@ -1115,7 +1115,7 @@ const Resume: React.FC = () => {
           <ProgressHeader 
             title="JOHN ANDREI C. CABILI"
             sectionId="resume"
-            subtitle="City of Manila, Metro Manila | GitHub | Website"
+            subtitle="Quezon City, Metro Manila | cabilijohnandrei@gmail.com"
           />
         </motion.div>
         
@@ -1218,11 +1218,11 @@ const Resume: React.FC = () => {
                   </EducationIcon>
                   <EducationContent>
                     <SchoolName>Adamson University</SchoolName>
-                    <Degree>Bachelor of Science in Computer Science (with Specialization in Web Science)</Degree>
+                    <Degree>B.S. in Computer Science, Specialization in Web Science</Degree>
                     <DateBadge>2021 - 2025</DateBadge>
-                    <Description>Honors: Summa Cum Laude; Top 2 Performing Computer Science Student</Description>
-                    <Description>Academic Distinctions: Academic Scholar; Dean’s Lister, 7 consecutive semesters</Description>
-                    <Description>Relevant Coursework: Web Development, Mobile App Development, Software Engineering, Machine Learning, Cybersecurity Fundamentals, Data Structures and Algorithms, and Cloud and API Integration</Description>
+                    <Description>Summa Cum Laude, Top 2 Performing Computer Science Student</Description>
+                    <Description>Academic Scholar; Dean's Lister for seven consecutive semesters</Description>
+                    <Description>Relevant Coursework: Web Development, Software Engineering, Machine Learning, Cybersecurity, Cloud & API Integration</Description>
                   </EducationContent>
                 </EducationCard>
               </StyledSection>
@@ -1246,9 +1246,9 @@ const Resume: React.FC = () => {
                     transition={{ delay: 0.1 }}
                   >
                     <SkillIcon>💻</SkillIcon>
-                    <SkillName>Languages & Markup</SkillName>
+                    <SkillName>Languages</SkillName>
                     <div style={{ fontSize: '14px', color: '#666', lineHeight: '1.5', marginTop: '8px' }}>
-                      Kotlin, Dart, Python, Java, TypeScript, HTML/CSS, PHP
+                      Java, JavaScript, Python, C#, Kotlin, Dart, TypeScript, SQL, HTML, CSS, PHP
                     </div>
                   </SkillCard>
                   
@@ -1260,7 +1260,7 @@ const Resume: React.FC = () => {
                     <SkillIcon>📦</SkillIcon>
                     <SkillName>Frameworks & Libraries</SkillName>
                     <div style={{ fontSize: '14px', color: '#666', lineHeight: '1.5', marginTop: '8px' }}>
-                      Jetpack Compose, Flutter, React, Next.js, TailwindCSS
+                      Spring Boot, Jetpack Compose, Flutter, React, Next.js, Tailwind
                     </div>
                   </SkillCard>
                   
@@ -1269,10 +1269,10 @@ const Resume: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
                   >
-                    <SkillIcon>🛠️</SkillIcon>
-                    <SkillName>Tools & Platforms</SkillName>
+                    <SkillIcon>🗄️</SkillIcon>
+                    <SkillName>Databases</SkillName>
                     <div style={{ fontSize: '14px', color: '#666', lineHeight: '1.5', marginTop: '8px' }}>
-                      Android Studio, Visual Studio, Git, GitHub, Power BI, MySQL
+                      MySQL, Oracle, PostgreSQL
                     </div>
                   </SkillCard>
                   
@@ -1281,10 +1281,22 @@ const Resume: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
                   >
-                    <SkillIcon>🔌</SkillIcon>
-                    <SkillName>Technologies & APIs</SkillName>
+                    <SkillIcon>🛠️</SkillIcon>
+                    <SkillName>Tools & Platforms</SkillName>
                     <div style={{ fontSize: '14px', color: '#666', lineHeight: '1.5', marginTop: '8px' }}>
-                      REST APIs, UI/UX Design, ML Model Integration, Technical Documentation
+                      Git, GitHub, Android Studio, Visual Studio, Power BI
+                    </div>
+                  </SkillCard>
+                  
+                  <SkillCard
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <SkillIcon>🔌</SkillIcon>
+                    <SkillName>Other</SkillName>
+                    <div style={{ fontSize: '14px', color: '#666', lineHeight: '1.5', marginTop: '8px' }}>
+                      REST APIs, Cloud Computing (hybrid concepts), DevOps fundamentals, UI/UX Integration, Secure Software Development, ML Model Integration
                     </div>
                   </SkillCard>
                 </SkillsGrid>
@@ -1310,9 +1322,9 @@ const Resume: React.FC = () => {
                     <JobTitle>Software Development and Artificial Intelligence Intern</JobTitle>
                     <Company><span>🏢</span> OTis Philippines Inc.</Company>
                     <DateBadge>2025</DateBadge>
-                    <Description>Conducted integration research on payment APIs and role-based access control (RBAC)</Description>
-                    <Description>Wrote and executed automated test scripts for language detection modules</Description>
-                    <Description>Contributed to technical documentation and architecture decision records for internal tools</Description>
+                    <Description>Integrated payment APIs and role-based access control (RBAC) for secure systems</Description>
+                    <Description>Automated language detection testing with backend scripts, boosting accuracy and efficiency</Description>
+                    <Description>Prepared technical documentation and architecture records to support scalable design</Description>
                   </ExperienceCard>
                 </ExperienceContainer>
               </StyledSection>
@@ -1332,14 +1344,11 @@ const Resume: React.FC = () => {
                     transition={{ delay: 0.05 }}
                   >
                     <JobTitle>Mangosoft: Philippine Mango Classification and Price Estimation</JobTitle>
-                    <Company><span>🏢</span> Mangosoft</Company>
-                    <DateBadge>2024</DateBadge>
-                    <Description>Developed a Kotlin-based Android app using Jetpack Compose for mango classification</Description>
-                    <Description>Integrated CNN for image processing and Random Forest for price estimation</Description>
-                    <Description>Implemented end-to-end ML pipeline and UI</Description>
-                    <Description><b>Awards:</b></Description>
-                    <Description>Best Research Paper, SIKAPTala 2025 National CS & IT Competition</Description>
-                    <Description>Best Research Project, CS Research Colloquium 2025</Description>
+                    <Company><span>🏢</span> Full-Stack Developer (Android & Machine Learning)</Company>
+                    <DateBadge>2025</DateBadge>
+                    <Description>Built a Kotlin Android app (Jetpack Compose) with backend integration and database workflows</Description>
+                    <Description>Implemented a CNN for image classification and a Random Forest for price prediction in an ML pipeline</Description>
+                    <Description>Delivered an end-to-end solution recognized as Best Research Paper at a national competition</Description>
                   </ExperienceCard>
                   <ExperienceCard
                     initial={{ opacity: 0, y: 20 }}
@@ -1347,13 +1356,11 @@ const Resume: React.FC = () => {
                     transition={{ delay: 0.1 }}
                   >
                     <JobTitle>OSCA (Office of Senior Citizen Affairs) Management System</JobTitle>
-                    <Company><span>🏢</span> Barangay 473, City of Manila</Company>
-                    <DateBadge>2023</DateBadge>
-                    <Description>Built a C# WinForms application for record management automation</Description>
-                    <Description>Implemented modular CRUD operations and real-time search functionality</Description>
-                    <Description>Optimized data workflows for senior citizen services in Barangay 473</Description>
-                    <Description><b>Recognition:</b></Description>
-                    <Description>Best in Academic Service Learning, Adamson University</Description>
+                    <Company><span>🏢</span> Full-Stack Developer (Desktop Systems)</Company>
+                    <DateBadge>2024</DateBadge>
+                    <Description>Developed a C# WinForms app with a MySQL backend to automate records and services</Description>
+                    <Description>Designed CRUD operations and optimized workflows to reduce errors and improve efficiency</Description>
+                    <Description>Delivered an enterprise-level system, awarded Best in Academic Service Learning</Description>
                   </ExperienceCard>
                 </ExperienceContainer>
               </StyledSection>
@@ -1394,14 +1401,6 @@ const Resume: React.FC = () => {
                       data-share-badge-host="https://www.credly.com">
                     </div>
                   </Badge>
-                  <Badge>
-                    <div 
-                      data-iframe-width="150" 
-                      data-iframe-height="270" 
-                      data-share-badge-id="db4fa698-ea9d-4544-adfe-6c10e21a4937" 
-                      data-share-badge-host="https://www.credly.com">
-                    </div>
-                  </Badge>
                 </BadgeContainer>
               </StyledSection>
               
@@ -1429,7 +1428,7 @@ const Resume: React.FC = () => {
                     <AwardContent>
                       <AwardOrganization>SIKAPTala 2025 National CS & IT Competition</AwardOrganization>
                       <DateBadge>2025</DateBadge>
-                      <Description>CNN-Based Philippine Mango Classification and Quality Assessment with Price Estimation</Description>
+                      <Description>Recognized for outstanding research contribution in computer science and information technology</Description>
                     </AwardContent>
                   </AwardCard>
                   
@@ -1439,12 +1438,12 @@ const Resume: React.FC = () => {
                     transition={{ duration: 0.6, delay: 0.2 }}
                   >
                     <AwardHeader>
-                      <AwardTitle>Best Research Project</AwardTitle>
+                      <AwardTitle>Best Research Project and Presenter</AwardTitle>
                     </AwardHeader>
                     <AwardContent>
-                      <AwardOrganization>CS Research Exhibit and Presentation</AwardOrganization>
+                      <AwardOrganization>CS Research Colloquium 2025</AwardOrganization>
                       <DateBadge>2025</DateBadge>
-                      <Description>CNN-Based Philippine Mango Classification and Quality Assessment with Price Estimation</Description>
+                      <Description>Awarded for exceptional research project development and presentation skills</Description>
                     </AwardContent>
                   </AwardCard>
                   
@@ -1454,27 +1453,12 @@ const Resume: React.FC = () => {
                     transition={{ duration: 0.6, delay: 0.3 }}
                   >
                     <AwardHeader>
-                      <AwardTitle>Best Research Presenter</AwardTitle>
-                    </AwardHeader>
-                    <AwardContent>
-                      <AwardOrganization>CS Research Exhibit and Presentation</AwardOrganization>
-                      <DateBadge>2025</DateBadge>
-                      <Description>Recognized for exceptional presentation skills and delivery of technical content</Description>
-                    </AwardContent>
-                  </AwardCard>
-                  
-                  <AwardCard
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                  >
-                    <AwardHeader>
                       <AwardTitle>Best in Academic Service Learning</AwardTitle>
                     </AwardHeader>
                     <AwardContent>
-                      <DateBadge>2023</DateBadge>
-                      <Description>Recognized for excellence in service-learning initiatives</Description>
-                      <Description>Created impactful community-focused software solutions</Description>
+                      <AwardOrganization>Adamson University</AwardOrganization>
+                      <DateBadge>2024</DateBadge>
+                      <Description>Recognized for excellence in academic service learning initiatives and community impact</Description>
                     </AwardContent>
                   </AwardCard>
                 </AwardsGrid>
