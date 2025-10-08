@@ -444,7 +444,7 @@ const QuickReplyButton = styled(motion.button)`
 const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) => {
   const [messages, setMessages] = useState<{ text: string; isBot: boolean; id: number; timestamp?: Date }[]>([
     { 
-      text: "Hi there! I'm JAC, John's virtual assistant. How can I help you today?", 
+      text: "Hi there! I'm JAC, John's virtual assistant. I'm here to help you learn about his full-stack development expertise and AI/ML integration capabilities. How can I assist you today?", 
       isBot: true, 
       id: 1,
       timestamp: new Date() 
@@ -467,9 +467,9 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
   // Memoize initial quick replies to prevent recreation
   const initialQuickReplies = useMemo(() => [
     { text: "Looking for John's resume", response: "You can view John's detailed resume on the Resume page. Would you like me to take you there?" },
-    { text: "Just saying hello!", response: "Hello there! Nice to meet you. I'm JAC, John's digital assistant. Is there anything specific you'd like to know about John or his work?" },
-    { text: "Interested in services", response: "John specializes in: \n\n• Front-end development (React, TypeScript)\n• Web Design\n• Full-stack solutions\n• Mobile app development\n\nWhich service are you interested in?" },
-    { text: "We'd like to hire John", response: "Thank you for your interest! John is currently open to new opportunities. Would you like me to help you contact him?" }
+    { text: "Just saying hello!", response: "Hello there! Nice to meet you. I'm JAC, John's digital assistant. He's a Computer Science graduate with full-stack development expertise and AI/ML integration experience. What would you like to know?" },
+    { text: "Interested in services", response: "John specializes in: \n\n• Full-stack development (React, Kotlin, Python)\n• AI & Machine Learning integration\n• Secure software development\n• Mobile app development (Android)\n• Cloud & API integration\n\nWhich service are you interested in?" },
+    { text: "We'd like to hire John", response: "Thank you for your interest! John is currently open to new opportunities. As a Summa Cum Laude Computer Science graduate with professional AI/ML experience, he's ready to contribute to your team. Would you like me to help you contact him?" }
   ], []);
   
   const [quickReplies, setQuickReplies] = useState(initialQuickReplies);
@@ -478,19 +478,20 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
   const contextQuickReplies = useMemo(() => ({
     resume: [
       { text: "Yes, show me the resume", response: "Opening John's resume page for you now..." },
-      { text: "Tell me about his skills first", response: "John specializes in React, TypeScript, Node.js, and Web Design. He's also familiar with mobile development and machine learning." },
+      { text: "Tell me about his skills first", response: "John is a Computer Science graduate (Summa Cum Laude) specializing in full-stack development, AI/ML integration, and secure software practices. He's proficient in Java, Kotlin, Python, React, and has professional experience at OTis Philippines Inc." },
       { text: "I'd like to contact him", response: "I'll open your email client to contact John directly. Would you like to discuss a project or opportunity?" }
     ],
     hire: [
       { text: "Send an email about a job", response: "Opening your email client to contact John about a job opportunity..." },
       { text: "Discuss a project", response: "Opening your email client to discuss a potential project with John..." },
-      { text: "Tell me more about his work", response: "John is a Front-End Developer from Manila with over 3 years of experience in React and modern JavaScript frameworks. Would you like to see specific projects?" },
+      { text: "Tell me more about his work", response: "John is a Computer Science graduate from Adamson University (Summa Cum Laude) with hands-on experience in full-stack development, AI/ML integration, and secure software practices. He's worked as a Software Development and AI Intern at OTis Philippines Inc. Would you like to see specific projects?" },
       { text: "Compose email", response: "I'll open your email with a blank template so you can compose your own message..." }
     ],
     services: [
-      { text: "Need a website built", response: "John has extensive experience building modern, responsive websites with React. Would you like to discuss your project with him?" },
-      { text: "Interested in Web Design", response: "John creates intuitive and appealing web designs. Would you like to contact him about your design project?" },
-      { text: "Mobile app development", response: "John develops cross-platform mobile applications using React Native. Would you like to email him about your app idea?" },
+      { text: "Need a website built", response: "John has extensive experience building full-stack web applications with modern technologies. He integrates AI/ML solutions and applies secure software practices. Would you like to discuss your project with him?" },
+      { text: "AI/ML integration needed", response: "John has professional experience integrating AI/ML models and developing intelligent solutions. He's worked on CNN-based image classification and ML pipelines. Would you like to contact him about your AI project?" },
+      { text: "Mobile app development", response: "John develops Android applications using Kotlin and Jetpack Compose, with backend integration and database workflows. Would you like to email him about your mobile app idea?" },
+      { text: "Secure software development", response: "John has certifications in cybersecurity and secure software development practices. He's experienced with RBAC implementation and secure API integration. Would you like to discuss your security requirements?" },
       { text: "Compose email", response: "I'll open your email with a blank template so you can compose your own message..." }
     ],
     contact: [
@@ -500,33 +501,37 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
       { text: "Compose email", response: "I'll open your email with a blank template so you can compose your own message..." }
     ],
     hello: [
-      { text: "Tell me about John", response: "John is a Front-End Developer from Manila with over 3 years of experience in React and modern JavaScript frameworks." },
-      { text: "What projects has he worked on?", response: "John has worked on various projects including web applications, mobile apps, and Web Design. Would you like to see some examples?" },
-      { text: "What services does he offer?", response: "John offers web development, Web Design, mobile app development, and full-stack solutions. Which are you interested in?" }
+      { text: "Tell me about John", response: "John is a Computer Science graduate from Adamson University, achieving Summa Cum Laude honors as the Top 2 Performing Computer Science Student. He specializes in full-stack development, AI/ML integration, and secure software practices." },
+      { text: "What projects has he worked on?", response: "John has worked on projects like Mangosoft (CNN-based mango classification with price estimation) and OSCA Management System. He also has professional experience as a Software Development and AI Intern at OTis Philippines Inc. Would you like to see specific examples?" },
+      { text: "What services does he offer?", response: "John offers full-stack development, AI/ML integration, secure software development, mobile app development, and cloud & API integration. Which are you interested in?" }
     ]
   }), []);
   
   // Memoize email templates to avoid recreating on every render
   const emailTemplates = useMemo(() => ({
     job: {
-      subject: "Job Opportunity for John Andrei Cabili",
-      body: "Hi John,\n\nI'm reaching out about a job opportunity that I believe matches your skills and experience.\n\n[Please include details about the position, company, and requirements]\n\nLooking forward to discussing this opportunity with you.\n\nBest regards,"
+      subject: "Job Opportunity for John Andrei Cabili - Full-stack Developer",
+      body: "Hi John,\n\nI'm reaching out about a job opportunity that I believe matches your skills and experience in full-stack development, AI/ML integration, and secure software practices.\n\n[Please include details about the position, company, and requirements]\n\nGiven your Computer Science background and professional experience at OTis Philippines Inc., I believe you would be a great fit for our team.\n\nLooking forward to discussing this opportunity with you.\n\nBest regards,"
     },
     project: {
       subject: "Project Collaboration with John Andrei Cabili",
-      body: "Hi John,\n\nI'm interested in collaborating with you on a project.\n\n[Please include project details, timeline, and objectives]\n\nWould love to discuss this further.\n\nBest regards,"
+      body: "Hi John,\n\nI'm interested in collaborating with you on a project that could benefit from your full-stack development expertise and AI/ML integration capabilities.\n\n[Please include project details, timeline, and objectives]\n\nGiven your experience with CNN-based applications and secure software development, I believe you would bring valuable expertise to this project.\n\nWould love to discuss this further.\n\nBest regards,"
     },
     website: {
-      subject: "Website Development Inquiry",
-      body: "Hi John,\n\nI'm interested in your web development services.\n\n[Please include details about your website needs, timeline, and specific requirements]\n\nLooking forward to your response.\n\nBest regards,"
+      subject: "Full-stack Web Development Inquiry",
+      body: "Hi John,\n\nI'm interested in your full-stack web development services.\n\n[Please include details about your website needs, timeline, and specific requirements]\n\nGiven your experience with React, backend integration, and secure software practices, I believe you would be perfect for this project.\n\nLooking forward to your response.\n\nBest regards,"
     },
-    uiux: {
-      subject: "UI/UX Design Services Inquiry",
-      body: "Hi John,\n\nI'm interested in your UI/UX design services.\n\n[Please include details about your design needs, timeline, and specific requirements]\n\nLooking forward to your response.\n\nBest regards,"
+    ai: {
+      subject: "AI/ML Integration Services Inquiry",
+      body: "Hi John,\n\nI'm interested in your AI/ML integration services.\n\n[Please include details about your AI/ML needs, data requirements, and specific objectives]\n\nGiven your experience with CNN-based image classification, ML pipelines, and professional AI development at OTis Philippines Inc., I believe you would be an excellent fit for this project.\n\nLooking forward to your response.\n\nBest regards,"
     },
     mobile: {
-      subject: "Mobile App Development Inquiry",
-      body: "Hi John,\n\nI'm interested in your mobile app development services.\n\n[Please include details about your app concept, platform preferences, and specific requirements]\n\nLooking forward to your response.\n\nBest regards,"
+      subject: "Android App Development Inquiry",
+      body: "Hi John,\n\nI'm interested in your Android app development services using Kotlin and Jetpack Compose.\n\n[Please include details about your app concept, features, and specific requirements]\n\nGiven your experience with backend integration and database workflows, I believe you would deliver a comprehensive mobile solution.\n\nLooking forward to your response.\n\nBest regards,"
+    },
+    security: {
+      subject: "Secure Software Development Inquiry",
+      body: "Hi John,\n\nI'm interested in your secure software development services.\n\n[Please include details about your security requirements, compliance needs, and specific objectives]\n\nGiven your certifications in cybersecurity and experience with RBAC implementation, I believe you would ensure our software meets the highest security standards.\n\nLooking forward to your response.\n\nBest regards,"
     },
     general: {
       subject: "Inquiry for John Andrei Cabili",
@@ -541,15 +546,15 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
   // Memoize bot responses to avoid recreating on every render
   const botResponses = useMemo(() => ({
     default: "I'm not sure I understand. Could you tell me more about what you're looking for?",
-    greeting: ["Hello there! How can I help you today?", "Hi! Nice to meet you. What brings you to John's portfolio?", "Hey! I'm here to help. What would you like to know about John's work?"],
-    about: "John is a Front-End Developer from Manila with over 3 years of experience in React and modern JavaScript frameworks. He specializes in creating responsive, user-friendly web applications.",
-    skills: "John specializes in React, TypeScript, Node.js, and Web Design. He's also experienced with mobile development and machine learning. What specific skills are you interested in?",
+    greeting: ["Hello there! How can I help you learn about John's full-stack development and AI/ML expertise?", "Hi! Nice to meet you. What brings you to John's portfolio?", "Hey! I'm here to help. What would you like to know about John's Computer Science background and professional experience?"],
+    about: "John is a Computer Science graduate from Adamson University, achieving Summa Cum Laude honors as the Top 2 Performing Computer Science Student. He specializes in full-stack development, AI/ML integration, and secure software practices with professional experience at OTis Philippines Inc.",
+    skills: "John specializes in full-stack development using Java, Kotlin, Python, React, and TypeScript. He has professional experience in AI/ML integration, secure software development, and cloud & API integration. What specific skills are you interested in?",
     contact: "Would you like me to open your email client to contact John directly? I can help you format an appropriate message.",
-    project: "John has worked on various projects including web applications, mobile apps, and Web Design. Would you like to see some examples or discuss a potential collaboration?",
+    project: "John has worked on projects like Mangosoft (CNN-based mango classification with price estimation) and OSCA Management System, plus professional experience as a Software Development and AI Intern at OTis Philippines Inc. Would you like to see some examples or discuss a potential collaboration?",
     thanks: ["You're welcome! Let me know if you need anything else.", "No problem at all! Feel free to reach out anytime.", "Glad I could help! Is there anything else you'd like to know?"],
-    hire: "Thank you for your interest in working with John! He's currently open to new opportunities. Would you like to discuss a job position or project collaboration?",
+    hire: "Thank you for your interest in working with John! As a Summa Cum Laude Computer Science graduate with professional AI/ML experience, he's currently open to new opportunities. Would you like to discuss a job position or project collaboration?",
     resume: "You can view John's comprehensive resume on the Resume page. Would you like me to redirect you there now?",
-    services: "John offers several services including:\n\n• Front-end development (React, TypeScript)\n• Web Design\n• Full-stack solutions\n• Mobile app development\n\nWhich service are you most interested in?",
+    services: "John offers several services including:\n\n• Full-stack development (React, Kotlin, Python)\n• AI & Machine Learning integration\n• Secure software development\n• Mobile app development (Android)\n• Cloud & API integration\n\nWhich service are you most interested in?",
     email: "I'll open your email client to contact John directly. Please include details about what you need help with in your message."
   }), []);
   
@@ -620,17 +625,22 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
       setTimeout(() => {
         openEmail('website');
       }, 1000);
-      return "Opening your email client to discuss website development with John...";
-    } else if (/mobile app/i.test(lowerText) && /develop|create|build/i.test(lowerText)) {
+      return "Opening your email client to discuss full-stack web development with John...";
+    } else if (/mobile app|android/i.test(lowerText) && /develop|create|build/i.test(lowerText)) {
       setTimeout(() => {
         openEmail('mobile');
       }, 1000);
-      return "Opening your email client to discuss mobile app development with John...";
-    } else if (/web design/i.test(lowerText) && /interested|need|want/i.test(lowerText)) {
+      return "Opening your email client to discuss Android app development with John...";
+    } else if (/ai|ml|machine learning|artificial intelligence/i.test(lowerText) && /need|want|interested|integrate/i.test(lowerText)) {
       setTimeout(() => {
-        openEmail('uiux');
+        openEmail('ai');
       }, 1000);
-      return "Opening your email client to discuss Web Design with John...";
+      return "Opening your email client to discuss AI/ML integration with John...";
+    } else if (/security|secure|cybersecurity/i.test(lowerText) && /need|want|interested|develop/i.test(lowerText)) {
+      setTimeout(() => {
+        openEmail('security');
+      }, 1000);
+      return "Opening your email client to discuss secure software development with John...";
     } else if (/project|work|portfolio/i.test(lowerText)) {
       setCurrentContextPrompts(contextQuickReplies.services);
       return botResponses.project;
@@ -724,9 +734,13 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
     } else if (reply.text === "Need a website built") {
       openEmail('website');
     } else if (reply.text === "Interested in Web Design") {
-      openEmail('uiux');
+      openEmail('website');
     } else if (reply.text === "Mobile app development") {
       openEmail('mobile');
+    } else if (reply.text === "AI/ML integration needed") {
+      openEmail('ai');
+    } else if (reply.text === "Secure software development") {
+      openEmail('security');
     } else if (reply.text === "Yes, show me the resume") {
       setTimeout(() => {
         window.location.href = '/resume';
@@ -817,7 +831,7 @@ const Contact: React.FC<{ openChat?: boolean }> = memo(({ openChat = false }) =>
   const handleResetChat = useCallback(() => {
     setMessages([
       { 
-        text: "Hi there! I'm JAC, John's virtual assistant. How can I help you today?", 
+        text: "Hi there! I'm JAC, John's virtual assistant. I'm here to help you learn about his full-stack development expertise and AI/ML integration capabilities. How can I assist you today?", 
         isBot: true, 
         id: 1,
         timestamp: new Date() 
